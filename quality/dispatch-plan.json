@@ -1,0 +1,5 @@
+{
+  "phase": "intel",
+  "profile": "sprint",
+  "dispatch_method": "fresh-subagent"
+}
