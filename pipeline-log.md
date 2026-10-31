@@ -24,3 +24,4 @@
 2026-10-31T13:49:40Z | build | START | build | Dispatching build
 2026-10-31T14:00:17Z | build | START | build | Dispatching build
 2026-10-31T14:02:45Z | hackathon-build | START | phase-0 | fresh build dispatch; prereqs met (forge+url_preverify complete); SPRINT; methodology not engaged (linear base)
+2026-10-31T14:34:36Z | hackathon-build | PROGRESS | phase-3 | C7 deployed @ 0xa8CD17A8...1738 (Base Sepolia 84532); C5 live OFAC real; C3/C4/run-cre code-real, live-run deferred to cre login (wire)

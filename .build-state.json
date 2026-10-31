@@ -1,8 +1,8 @@
 {
   "project": "TravelProof",
-  "currentPhase": "phase-3",
-  "currentStep": "3.1",
-  "currentSubStep": "3.1.a",
+  "currentPhase": "phase-4",
+  "currentStep": "4.1",
+  "currentSubStep": "4.1.a",
   "status": "in-progress",
   "autonomous_mode": true,
   "run_profile": "SPRINT",
@@ -23,7 +23,12 @@
     "1.2",
     "1.3",
     "2.1",
-    "2.2"
+    "2.2",
+    "3.1",
+    "3.2",
+    "3.3",
+    "3.4",
+    "3.4b"
   ],
   "fileGroups": {},
   "deviations": [
@@ -90,15 +95,60 @@
       "reason": "headless OAuth impossible; wire-phase gate; no verdict fabricated",
       "class": "UNTESTED",
       "impact": "C4 live run deferred to wire; C5 live screen fully real"
+    },
+    {
+      "step": "3.3",
+      "id": "DEV-301",
+      "description": "TRISA lookup fails closed to SYNTHETIC_FALLBACK (disclosed via source); api.testnet.directory is gRPC-only (HTTP 415)",
+      "reason": "honest INVARIANT 7 path",
+      "class": "DEGRADED",
+      "impact": "none"
+    },
+    {
+      "step": "3.1",
+      "id": "DEV-302",
+      "description": "forge install without --no-commit (flag removed in 1.4.4)",
+      "reason": "flag gone",
+      "class": "COSMETIC",
+      "impact": "none"
+    },
+    {
+      "step": "3.2",
+      "id": "DEV-303",
+      "description": "contract verified on Sourcify not Etherscan (no API key)",
+      "reason": "no ETHERSCAN_API_KEY",
+      "class": "COSMETIC",
+      "impact": "none"
+    },
+    {
+      "step": "3.4b",
+      "id": "DEV-304",
+      "description": "run-cre.sh kept fail-loud stub; real simulate lines commented ready for wire",
+      "reason": "cre login headless-impossible; constant PASS would fabricate verdicts (A-G4)",
+      "class": "UNTESTED",
+      "impact": "none"
     }
   ],
   "phaseExecutors": {
     "phase-0": "subagent",
     "phase-1": "subagent",
-    "phase-2": "subagent"
+    "phase-2": "subagent",
+    "phase-3": "subagent + inline(deploy)"
   },
-  "contractAddresses": {},
-  "env": {},
+  "contractAddresses": {
+    "TravelRuleAttestation": {
+      "address": "0xa8CD17A860f3A0DE51e1135248F22560d4721738",
+      "network": "base-sepolia-84532",
+      "txHash": "0x14328bc1f06ec5dfa6b87d503af7e0dd03c4d7593fdb216dc4c7692e3b9545d8",
+      "block": 52676285,
+      "forwarder": "0xF8344CFd5c43616a4366C34E3EEE75af79a74482",
+      "verified": "sourcify-submitted"
+    }
+  },
+  "env": {
+    "ATTESTATION_ADDRESS": "0xa8CD17A860f3A0DE51e1135248F22560d4721738",
+    "KEYSTONE_FORWARDER_ADDR": "0xF8344CFd5c43616a4366C34E3EEE75af79a74482"
+  },
   "devPort": 3000,
   "depsVerified": true,
   "invariantsConsumed": true,
@@ -125,10 +175,10 @@
   },
   "ciScaffolded": true,
   "cre_login_status": "NOT_LOGGED_IN; C4 simulate deferred to wire (DEV-204); installed CLI is v1.2.0, no 'workflow build' subcommand",
-  "c3_beta_invite_requested": false,
+  "c3_beta_invite_requested": "PREPARED (submission/C3-BETA-INVITE-REQUEST.md); form is human-gated, surfaced to Dami",
   "verification_commands": [],
   "screenshot_paths": [],
-  "context_percentage": 48,
+  "context_percentage": 62,
   "provenance": {
     "agent_nonce": "49043cf0db415dea459b7329",
     "session": "build-orchestrator-fresh-2026-10-31"
