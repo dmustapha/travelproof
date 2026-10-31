@@ -21,6 +21,8 @@
 <!-- Owner-routed, non-blocking deferred work. Every skill reads on entry, actions rows it owns. See PULSE-PROTOCOL § Downstream Items. -->
 | ID | Raised by | Owner phase | Pri | Item | Acceptance | Status |
 |----|-----------|-------------|:---:|------|-----------|:------:|
+| AMP-2 | build | verify_preflight | P1 | LIP-SERVICE ADOPT: 21 promised change(s) did not land in their artifact (see ADOPT-VERIFICATION-build.md) | Each ADOPTed change actually applied to its artifact, or the ADOPT honestly downgraded | open |
+| AMP-1 | build | verify_preflight | P1 | Quality-Mandate FALSE SHORTCUT flagged by logic-audit (bold-2) — human must rule enforce-quality vs accept-shortcut (see ESCALATION-build.md) | Human ruled; shortcut either reversed to the quality path or consciously accepted with reason | open |
 
 ## Skill Sections
 
@@ -198,3 +200,33 @@ Verdict: FEASIBLE as scoped. (Resolution recorded here + in forge's A-G4 critica
 
 #### DL-learn
 VF-b1 TravelRuleAttestation deployed no-PII @ 0xa8CD17A8..1738 | Recompute: cast code + s_forwarderAddress() on Base Sepolia | => bytecode present + forwarder 0xF8344C
+
+## Amplifier
+
+### Perspective (build, claude)
+22 points across 5 buckets → PERSPECTIVE-build.md; bolder: Reframe the product as a recomputable compliance receipt (resolver output + SDN publishDate + screen result → commitment hash) that verify-claims reproduces f
+
+## Amplifier
+
+### Response (build, codex)
+3 ADAPT, 18 ADOPT, 1 REJECT over 22 points → PERSPECTIVE-RESPONSE-build.md
+
+## Amplifier
+
+### Response (build-canary, codex)
+5 ADAPT, 17 ADOPT, 1 REJECT over 23 points → PERSPECTIVE-RESPONSE-build-canary.md
+
+## Amplifier
+
+### Engagement canary (build)
+planted bad point → builder said REJECT (PASS)
+
+## Amplifier
+
+### ⚠ ESCALATION (build)
+logic-audit flagged false-shortcut → paused for human ruling. See ESCALATION-build.md
+
+## Amplifier
+
+### Adopt verification (build)
+0/21 ADOPTs landed; 21 lip-service
