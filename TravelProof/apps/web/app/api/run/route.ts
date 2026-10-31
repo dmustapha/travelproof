@@ -10,7 +10,18 @@ import { triggerCreRun } from "../../../lib/cre";
 const SCREEN_VERDICTS = ["CLEAR", "HIT", "DEGRADED"] as const;
 
 export async function POST(req: NextRequest) {
-  const intent = (await req.json()) as TransferIntent;
+  // Parse fail-closed: a non-JSON / empty body throws SyntaxError in req.json() and would
+  // surface as an opaque 500 before the shape guard below ever runs. Catch it as a clean 400
+  // (same discipline as the missing-fields guard — never a swallowed 500).
+  let intent: TransferIntent;
+  try {
+    intent = (await req.json()) as TransferIntent;
+  } catch {
+    return NextResponse.json(
+      { stage: "BAD_REQUEST", reason: "request body is not valid JSON" },
+      { status: 400 },
+    );
+  }
   // Fail-closed on a malformed intent: the structured IVMS fields are mandatory. A missing
   // originator/beneficiary object would crash buildIvms (undefined.primaryIdentifier) with an
   // opaque 500; reject it as a clean 400 instead (never a swallowed 500, never a fabricated pass).
@@ -52,7 +63,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ stage: "DEGRADED", reason: "CRE runner returned a non-enum verdict (not wired?)", verifyVerdict, screenVerdict }, { status: 502 });
   }
   const commitment = commitmentHash(commitmentInputFromIvms(ivms, verifyVerdict));
-  putRun({ jobId, applicability, ivms, verifyVerdict, screenVerdict, commitmentHash: commitment, txHash: txHashes[0], publishDate, createdAt: Date.now() });
+  putRun({ jobId, applicability, ivms, verifyVerdict, screenVerdict, commitmentHash: commitment, txHash: txHashes[0], publishDate, createdAt: Date.now(), transfer: { amount: intent.amount, assetSymbol: intent.assetSymbol, fiatValueUsd: intent.fiatValueUsd } });
   const cleared = verifyVerdict === 0 && screenVerdict === "CLEAR";
   return NextResponse.json({ stage: cleared ? "CLEARED" : "DO_NOT_TRANSMIT", jobId, applicability, verifyVerdict, screenVerdict, txHashes });
 }

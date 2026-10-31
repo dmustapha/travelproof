@@ -5,13 +5,15 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { NextRequest, NextResponse } from "next/server";
 import { MemoDoc } from "../../../../lib/memo";
 import { getRun } from "../../../../lib/runStore";
+import { readAttestation, attestationMatches } from "../../../../lib/attest";
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ jobId: string }> }) {
   const { jobId } = await params;
   const run = getRun(jobId);
   if (!run) return NextResponse.json({ error: "no record for this job" }, { status: 404 });
+  const att = await readAttestation(jobId);
   const cleared = run.verifyVerdict === 0 && run.screenVerdict === "CLEAR";
-  const txUrl = `https://sepolia.basescan.org/tx/${run.txHash ?? ""}`;
+  const txUrl = run.txHash ? `https://sepolia.basescan.org/tx/${run.txHash}` : "(no transaction hash recorded)";
   const buffer = await renderToBuffer(
     MemoDoc({
       ivms: run.ivms,
@@ -20,7 +22,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ job
       commitment: run.commitmentHash,
       txUrl,
       cleared,
-      publishDate: run.publishDate ?? "(OFAC publish date unavailable)",
+      transfer: run.transfer, attested: attestationMatches(run, att), verifyVerdict: run.verifyVerdict, screenVerdict: run.screenVerdict, publishDate: run.publishDate ?? "(OFAC publish date unavailable)",
     }),
   );
   return new NextResponse(new Uint8Array(buffer), {

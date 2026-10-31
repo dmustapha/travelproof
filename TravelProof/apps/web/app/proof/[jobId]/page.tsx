@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Proof({ params }: { params: Promise<{ jobId: string }> }) {
   const { jobId } = await params;
-  const att = await getAttestation(jobId as `0x${string}`);
+  const att = await getAttestation(jobId as `0x${string}`).catch(() => null);
   const addr = process.env.ATTESTATION_ADDRESS ?? "";
   if (!att) {
     return (
