@@ -1,1 +1,108 @@
-[]
+{
+  "project": "TravelProof",
+  "generatedBy": "hackathon-build (WS-EX producer; ship-readiness remediation)",
+  "generatedAt": "2026-10-31T16:40:00Z",
+  "schemaVersion": "1",
+  "claims": [
+    {
+      "id": "C1",
+      "claim": "The TravelRuleAttestation contract is deployed and live on Base Sepolia (chain 84532).",
+      "value": "0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD",
+      "evidence": "0xd8d5d6543e906bb448f50415973aa092c1a5aac97789fe25f230913be94a5530",
+      "regenerate": "cast code 0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD --rpc-url $BASE_SEPOLIA_RPC_URL | head -c 12  # => 0x6080604052",
+      "tier": "VERIFIED",
+      "limitation": "Proves bytecode is present at the address on Base Sepolia; does not prove any attestation rows have been written yet (the two seed attestations await cre login).",
+      "evidenceClass": "testnet_observation"
+    },
+    {
+      "id": "C2",
+      "claim": "No personal data can be written on-chain — the attestation storage struct holds only a bytes32 commitmentHash (no string fields), so a PII write is structurally unrepresentable.",
+      "value": "bytes32 commitmentHash",
+      "evidence": "TravelProof/contracts/src/TravelRuleAttestation.sol",
+      "regenerate": "grep -cE '^[[:space:]]*string' TravelProof/contracts/src/TravelRuleAttestation.sol  # => 0",
+      "tier": "VERIFIED",
+      "limitation": "Proves the storage layout cannot hold a string (PII) field; the on-chain record holds only a bytes32 commitment hash, two uint8 verdicts, a uint64 timestamp and two bools.",
+      "evidenceClass": "testnet_observation"
+    },
+    {
+      "id": "C3",
+      "claim": "The contract's attestation is guarded by the real non-zero Chainlink CRE KeystoneForwarder on Base Sepolia (read back on-chain).",
+      "value": "0xF8344CFd5c43616a4366C34E3EEE75af79a74482",
+      "evidence": "0xd8d5d6543e906bb448f50415973aa092c1a5aac97789fe25f230913be94a5530",
+      "regenerate": "cast call 0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD \"s_forwarderAddress()(address)\" --rpc-url $BASE_SEPOLIA_RPC_URL  # => 0xF8344CFd5c43616a4366C34E3EEE75af79a74482",
+      "tier": "VERIFIED",
+      "limitation": "Proves the write path is gated by the official Chainlink forwarder; workflow-id binding (diff-2) is a wire-phase hardening still open.",
+      "evidenceClass": "testnet_observation"
+    },
+    {
+      "id": "C4",
+      "claim": "The OFAC SDN screen hits the live Treasury feed every run and fails closed — it is never a cached CLEAR.",
+      "value": "302",
+      "evidence": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML",
+      "regenerate": "curl -s -o /dev/null -w '%{http_code}' https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML  # => 302 (Treasury 302->CDN; never a stub)",
+      "tier": "VERIFIED",
+      "limitation": "Proves the live Treasury SDN service is reachable (302 to the CDN export) and that source carries no cached SDN list; the P2 live smoke additionally confirmed publishDate 10/28/2026, 1058 addresses, Garantex demo HIT self-check passing.",
+      "evidenceClass": "mainnet_observation"
+    },
+    {
+      "id": "C5",
+      "claim": "The applicability resolver is deterministic with zero AI on the decision path (INVARIANT 3), and the IVMS 101.2023 commitment round-trips byte-for-byte — core suite 12/12 green.",
+      "value": "12/12",
+      "evidence": "BUILD-REPORT.md",
+      "regenerate": "cd TravelProof && corepack pnpm --filter @travelproof/core test 2>&1 | grep -oE 'Tests +[0-9]+ passed' | tail -1 | tr -d '[:space:]'  # => Tests12passed",
+      "tier": "VERIFIED",
+      "limitation": "Proves the deterministic resolver + IVMS101 builder + keccak256 commitment round-trip pass offline; does not exercise the live CRE verify leg (deferred to wire on cre login).",
+      "evidenceClass": "historical_replay"
+    },
+    {
+      "id": "C6",
+      "claim": "The OFAC screen package passes 6/6 (exact base58 hit, EVM case-insensitive, aka fuzzy match, and two fail-closed SCREEN_DEGRADED paths).",
+      "value": "6/6",
+      "evidence": "BUILD-REPORT.md",
+      "regenerate": "cd TravelProof && corepack pnpm --filter @travelproof/ofac test 2>&1 | grep -oE 'Tests +[0-9]+ passed' | tail -1 | tr -d '[:space:]'  # => Tests6passed",
+      "tier": "VERIFIED",
+      "limitation": "Covers the matcher + fail-closed behaviour against fixtures; the live feed itself is covered by C4.",
+      "evidenceClass": "historical_replay"
+    },
+    {
+      "id": "C7",
+      "claim": "The contract-level regression suite passes 8/8, including the peer-review fix that a single verdict leg emits no premature CLEARED event.",
+      "value": "8/8",
+      "evidence": "BUILD-REPORT.md",
+      "regenerate": "cd TravelProof/contracts && forge test 2>&1 | grep -c '\\[PASS\\]'  # => 8 (the eight [PASS] lines; BUILD-REPORT.md records 8/8)",
+      "tier": "VERIFIED",
+      "limitation": "Proves the contract logic (incl. diff-1 premature-CLEARED fix, onlyForwarder, write-once legs) passes under forge; the deployed instance is the re-deployed fixed contract C1.",
+      "evidenceClass": "historical_replay"
+    },
+    {
+      "id": "C8",
+      "claim": "The deterministic deployment target is Base Sepolia, chain id 84532.",
+      "value": "84532",
+      "evidence": "BUILD-REPORT.md",
+      "regenerate": "cast chain-id --rpc-url $BASE_SEPOLIA_RPC_URL  # => 84532",
+      "tier": "VERIFIED",
+      "limitation": "Confirms the RPC endpoint resolves to Base Sepolia 84532 (the CRE-supported testnet selector).",
+      "evidenceClass": "testnet_observation"
+    },
+    {
+      "id": "C9",
+      "claim": "Two seed attestations are written on-chain so /ledger and /proof render live rows.",
+      "value": "",
+      "evidence": "BUILD-RESULTS.md",
+      "regenerate": "",
+      "tier": "NOT_BUILT",
+      "limitation": "Deliberately deferred: scripts/run-cre.sh is a fail-loud stub and the real CRE verify+screen runs need an interactive cre login (browser OAuth, needs Dami) plus a CRE project scaffold (wire phase). api/run fails closed to 502 DEGRADED until wired; the on-chain READ path is live now and populates with zero code change once the seed runs. No verdict is ever fabricated.",
+      "evidenceClass": "publisher_claim"
+    },
+    {
+      "id": "C10",
+      "claim": "The CRE Confidential-HTTP enclave verify (C3) runs live in the demo.",
+      "value": "",
+      "evidence": "LIMITATIONS.md",
+      "regenerate": "",
+      "tier": "UNVERIFIABLE",
+      "limitation": "The C3 workflow code is real and authored against cre-sdk 1.23.0 symbols, but a live run additionally awaits the Confidential Workflows private-beta invite and is labelled 'beta access pending' everywhere (INVARIANT 6). It is never simulated or fabricated; its only honest fallback is the documented degradation.",
+      "evidenceClass": "publisher_claim"
+    }
+  ]
+}

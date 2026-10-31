@@ -1,0 +1,72 @@
+# Perspective — build (claude)
+
+> Open second-perspective (advisory). Each point has an id for the receive/reason/decide loop.
+
+## how i read this
+
+The builder is solving the right problem. It is a deterministic Travel Rule applicability resolver, a live OFAC screen, and an on-chain attestation that stores a commitment hash and verdicts but no PII, wrapped in a UI that fails closed. A legal-tech hackathon is about trust: a judge needs to believe a CLEARED verdict was not fabricated. The strongest instinct in the build is that nothing returns a constant PASS, so the honest 'DEGRADED / WIRE_REQUIRED' states are the product's credibility. The report is also candid about its deviations.
+
+The gap is that the headline claim is 'attested by a CRE DON', and that leg does not run. Both CRE workflows (C4/C3) are untested, run-cre.sh is a stub that exits 1, and the seed attestations are deferred. So the end-to-end thesis (intent, then DON, then onchain CLEARED, then the ledger) has never executed once. What exists is a good resolver, a good OFAC fetch, a deployed contract with unit tests, and a UI that shows the failure state. 'COMPLETE' on phase-3 and phase-4 is generous for a demo whose main path degrades. The calendar matters too: it is 2026-10-31 and the BLI Legal deadline is 11-01 02:01 WAT, so the unlogged `cre login` is a schedule risk, not a minor note.
+
+Reading the code, I found a few real correctness issues in files the report marks as green. They are mostly in the contract's event semantics and in the resolver's edge cases. The resolver's legal mapping is also US-blind. None of them show up in the verification table, which suggests the tests check the happy path and the fail-closed paths but not the semantic edges.
+
+- **read-1** — The problem framing is right: deterministic applicability, live sanctions data, a no-PII commitment ledger, and fail-closed UX. Honesty about degraded states is the right trust story for a legal-tech judge.
+- **read-2** — The headline CRE-attested flow has never run end to end. C4, C3, run-cre and the seed attestations are all deferred, so 'COMPLETE' for phase-3/4 overstates what a judge can see live.
+- **read-3** — The deadline is effectively tonight (BLI 11-01 02:01 WAT). Interactive `cre login` is a human-gated blocker that decides whether the demo has any green CLEARED path, so it should be treated as the critical path.
+- **read-4** — The report is internally inconsistent in places: the summary says 12/12 core tests but verification says 9/9, and the Contract Addresses and Env Vars tables are empty despite a real deploy. Small, but it erodes the 'every claim recomputes' brand.
+
+## whats strong
+
+The DEV-202 catch is the best thing in the build. fast-xml-parser coercing the hex EVM idNumber 0x7FF9… to 7.30e+47 would have silently dropped a sanctioned address and produced a false CLEAR, and it was found by a live smoke test with a Garantex self-check. Along with `removeNSPrefix`, the zero-entry throw and `assertDemoHitPresent`, parseSdn treats an empty or corrupted index as an error, not as 'no hits'. That is the correct posture for a sanctions screen.
+
+The contract's structure is also good. There is no string or bytes field, so a PII write cannot be represented. The forwarder is immutable and non-zero. Each leg is write-once, and a flip or replay reverts with AlreadySet. The resolver is a pure function, with no model or network imports, and it routes unknowns to NEEDS_HUMAN_REVIEW instead of guessing. Its citation constants are centralised and linted against banned citations (the 1010.410(f)-for-crypto trap). The commitment key order is round-trip tested across the workflow and the core. The DEV table is a good audit trail.
+
+- **strong-1** — Protect the fail-closed OFAC parser: removeNSPrefix, parseTagValue:false, throw on a missing root or 0 entries, and the demo-address self-check. The DEV-202 hex-coercion fix prevents a real false-negative.
+- **strong-2** — Protect the no-PII-by-construction contract shape (fixed-width fields only, immutable forwarder, ZeroForwarder revert, write-once legs). It is a structural argument, not a policy one.
+- **strong-3** — Protect the pure, model-free resolver with explicit NEEDS_HUMAN_REVIEW on unknown CASP status, plus the citation lint. Determinism is the legal-defensibility story.
+- **strong-4** — Protect the practice of not fabricating verdicts (run-cre.sh exits 1, api/run returns 502 DEGRADED, VASP lookup labelled SYNTHETIC_FALLBACK). The disclosure itself builds trust.
+
+## what id do differently
+
+I would fix the contract's emit logic first. `_maybeEmit` runs after either leg and computes the verdict from `verifyVerdict==0 && screenVerdict==0`. Unset fields default to 0, which means PASS and CLEAR. If the verify leg lands first with PASS, the contract emits EnclaveAttestation(verdict=0, i.e. CLEARED) before any screen result exists. The reverse order has the same problem with a screen CLEAR. The ledger indexer or UI that reads this event could show CLEARED when the OFAC leg has not been checked, which is a false-clear in the one place that must not have one. Emit only when both `verifySet && screenSet`, and make getAttestation return the set flags or a status enum (NONE/PARTIAL/FINAL) so readers can tell 'unset' from 'CLEAR'. Validate verdict values (≤2) on write.
+
+The contract also has an authorization gap. `onReport` ignores the metadata argument, and the Chainlink forwarder is shared infrastructure. Checking `msg.sender` alone proves 'some CRE workflow' wrote the report, not 'our workflow'. Decode the workflow ID or owner from the metadata and compare them to stored expected values. Without that, anyone with CRE access can pre-write a jobId, and because the legs are write-once, they can permanently poison it.
+
+In the resolver, validate `fiatValueUsd` (NaN, negative, Infinity). `NaN >= 1000` is false, so a bad value falls into the below-threshold branch (fail-open to the reduced-data regime). Row 5 contradicts itself: it returns applicable:true while saying 'out of transmit scope', and its comment describes the direction backwards. Rows 3–4 below the threshold require ORIG_FIELDS_FULL while the rationale says 'reduced data', so the required-fields list is wrong for that case. The code also compares USD to a USD/EUR 1,000 threshold with no FX handling.
+
+In sdn.ts, add a size/count sanity floor (for example >5k entries and >0 addresses) in place of the `length<1000` check. Add a fetch timeout and a publishDate staleness check. Remove or gate the `OFAC_SDN_URL` env override in production, because it can point a sanctions screen at an arbitrary file.
+
+- **diff-1** — Emit EnclaveAttestation only when both legs are set. Today the first leg to land emits verdict 0 (CLEARED) because the unset leg defaults to 0, so the event is a premature false-CLEARED. Also expose verifySet/screenSet or a status enum in getAttestation.
+- **diff-2** — Bind onReport to our workflow, not just the shared forwarder. Decode the metadata (workflowId/owner/name) and compare it to stored expected values, otherwise any CRE workflow can write or poison a jobId.
+- **diff-3** — Validate inputs in the resolver. A NaN or negative fiatValueUsd silently falls below the threshold, which is fail-open. Fix Row 5 (applicable:true yet 'out of scope', comment direction reversed) and make the required fields match the 'reduced data' rationale below the FATF threshold.
+- **diff-4** — Harden sdn.ts: replace the 1000-char check with entry and address count floors, add a fetch timeout, compare publishDate against now for staleness, and drop or lock the OFAC_SDN_URL env override.
+- **diff-5** — Validate verdict range (≤2) on write and add a retry path for DEGRADED. The write-once rule currently makes a transient DEGRADED leg permanent for that jobId.
+
+## whats missing or risky
+
+The largest risk is the demo path. With `cre login` unresolved, there is no CLEARED or HIT attestation on the live ledger, and the seed is empty. A judge opening /ledger sees an empty-state page. The other CRE-dependent pieces (counterparty VASP verification) are SYNTHETIC_FALLBACK, so even the 'verify' half of verify-and-screen is not real.
+
+The contract has a few more gaps. There is no per-jobId binding between the commitment hash and the screen leg, so the screen verdict for jobId X can arrive without ever being tied to the same commitment. Event and field naming ('EnclaveAttestation', 'enclave') contradicts the 'not a TEE quote' disclaimer. A skeptical reader will notice. Source verification is only Sourcify (job submitted, not confirmed).
+
+Legal coverage is thin. The resolver models EU TFR and FATF R.16 only. For US-facing users, the FinCEN Travel Rule ($3,000, 31 CFR 103.33(g)) is the obvious one, and its absence is not flagged. The enum has no US value. Beyond that, only digital-currency addresses and names from the SDN are screened. There is no consolidated non-SDN list, no EU/UK lists, and no address normalisation for case-insensitive formats like bech32. The EVM case-insensitive set is the only normalisation. The screening threshold for fuzzy name matching is not exposed for audit.
+
+Test coverage looks happy-path plus fail-closed. Nothing exercises event ordering on the contract, forwarder-metadata spoofing, or resolver edge numerics, which is exactly where the bugs I found are. The report's table says 'YES' everywhere, but the tests only prove what they were written to prove.
+
+- **risk-1** — There is no live CLEARED or HIT attestation. The ledger is empty and the verify leg is SYNTHETIC_FALLBACK, so the demo is a story about the failure modes, not a working proof.
+- **risk-2** — The premature-CLEARED event (a single leg landing emits verdict 0) and the missing workflow-identity check are contract-level correctness and security flaws that the 5/5 forge tests do not cover.
+- **risk-3** — Legal scope is EU and FATF only. The US $3,000 FinCEN rule is absent, and OFAC coverage excludes non-SDN lists and bech32/other address normalisation, so 'compliant' claims need a scope disclaimer.
+- **risk-4** — Naming collides with the claims: 'EnclaveAttestation' and 'enclave' in the event name while the docs say 'NOT a TEE quote'. Sourcify verification was submitted but not confirmed.
+- **risk-5** — Report hygiene: 12/12 vs 9/9 test counts, empty Contract Addresses and Env Vars tables, and 'COMPLETE' status on phases whose live legs are UNTESTED.
+
+## bolder alternative
+
+I would reframe the project from 'a CRE-attested compliance oracle' to 'a verifiable compliance receipt that anyone can recompute'. The strongest artifacts here do not depend on `cre login`: a deterministic resolver, a live OFAC fetch, a commitment hash, and a contract that only stores hashes. Make the receipt the product. Given an intent, the resolver output, the SDN publishDate and the screen result, anyone runs `verify-claims` and reproduces the commitment hash that the chain holds. The attester then becomes a swappable component. Today it is the CRE DON; tonight it can be a plain signed report from the deployer key (an EOA forwarder in a second deployment) that is clearly labelled 'single-signer mode'. That yields a real CLEARED and a real HIT on-chain, with an honest trust label, by midnight.
+
+I would also lean into the HIT story. Screening a known-sanctioned address and then blocking transmission is the most dramatic and most verifiable demo moment. It is also the one with live data (1058 addresses). A CLEARED path matters less than showing that DO-NOT-TRANSMIT cannot be bypassed and is anchored on-chain.
+
+Finally, I would make partial states first-class in the contract (NONE, VERIFIED_ONLY, SCREENED_ONLY, FINAL) with the status in the event. 'Partial' becomes a feature the UI explains, which removes the false-CLEARED bug and turns the two-leg design into a visible narrative.
+
+- **bold-1** — Reframe the product as a recomputable compliance receipt (resolver output + SDN publishDate + screen result → commitment hash) that verify-claims reproduces from public data. The attester is then pluggable.
+- **bold-2** — Deploy a single-signer-mode attester (EOA as the forwarder) tonight to put a real CLEARED and a real HIT on-chain. Label the trust model plainly and keep the CRE DON as the upgrade path once login clears.
+- **bold-3** — Lead the demo with the HIT/DO-NOT-TRANSMIT moment on a live-sanctioned address (1058 live addresses). It is the most dramatic and the most verifiable beat, and it does not need CRE.
+- **bold-4** — Model the contract as a state machine (NONE / VERIFIED_ONLY / SCREENED_ONLY / FINAL) with the status in the event and the getter. It removes the false-CLEARED bug and makes the two-leg design visible in the UI.
