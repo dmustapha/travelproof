@@ -2,5 +2,17 @@
   "intel": {
     "verdict": "pass",
     "sig": "6408d373e3c19c981478c1dcd4b17dbccc01746994b2189c568a43d1c1c81af4"
+  },
+  "warroom": {
+    "verdict": "pass",
+    "sig": "ca0d86cc4f67f4729ed7154e992666352c15f3600e4c79042e8e3f9186b7882f"
+  },
+  "forge": {
+    "verdict": "pass",
+    "sig": "05259580e8a8fdddb8d3ce99e6b167780af6cc41d182142efbd2d6564e7fd353"
+  },
+  "critique": {
+    "verdict": "pass_with_blockers",
+    "sig": "9d1e8b5d6b65a683561deb5e47bf76fdb85e386a6ee7f786a54b32018ca853dc"
   }
 }

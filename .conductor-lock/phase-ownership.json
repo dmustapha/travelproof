@@ -1,5 +1,5 @@
 {
-  "phase": "intel",
-  "conductor_state_checksum": "ba90597669f6282f0f6e37c5f0c188af122abd78f2640022450bba693b0c9eae",
-  "captured_at": "2026-10-28T21:09:33Z"
+  "phase": "build",
+  "conductor_state_checksum": "ce3fb1078eb4d3d812bcc7b8f8fd7491330105d061391b7e5a6baa79b1cb9a6a",
+  "captured_at": "2026-10-31T14:00:17Z"
 }
