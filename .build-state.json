@@ -1,8 +1,8 @@
 {
   "project": "TravelProof",
-  "currentPhase": "phase-2",
-  "currentStep": "2.1",
-  "currentSubStep": "2.1.a",
+  "currentPhase": "phase-3",
+  "currentStep": "3.1",
+  "currentSubStep": "3.1.a",
   "status": "in-progress",
   "autonomous_mode": true,
   "run_profile": "SPRINT",
@@ -21,7 +21,9 @@
     "0.2",
     "1.1",
     "1.2",
-    "1.3"
+    "1.3",
+    "2.1",
+    "2.2"
   ],
   "fileGroups": {},
   "deviations": [
@@ -56,11 +58,44 @@
       "reason": "tsc gate had no config; bundler matches extensionless frozen imports",
       "class": "DEGRADED",
       "impact": "none"
+    },
+    {
+      "step": "2.1",
+      "id": "DEV-201",
+      "description": "ofac devDeps added",
+      "reason": "scaffold gap",
+      "class": "COSMETIC",
+      "impact": "none"
+    },
+    {
+      "step": "2.1",
+      "id": "DEV-202",
+      "description": "parseTagValue:false added to XMLParser - fixes real false-CLEAR (hex EVM addr coerced to sci-notation, dropping a sanctioned address)",
+      "reason": "arch \u00a75 omitted it",
+      "class": "DEGRADED",
+      "impact": "none (FIXED)"
+    },
+    {
+      "step": "2.1",
+      "id": "DEV-203",
+      "description": "fuzzball import * as fuzz (CJS interop)",
+      "reason": "no default export under ESM",
+      "class": "DEGRADED",
+      "impact": "none (FIXED)"
+    },
+    {
+      "step": "2.2",
+      "id": "DEV-204",
+      "description": "C4 screen.workflow.ts authored vs real cre-sdk 1.23.0; simulate blocked by interactive cre login + CLI v1.2.0 lacks workflow build",
+      "reason": "headless OAuth impossible; wire-phase gate; no verdict fabricated",
+      "class": "UNTESTED",
+      "impact": "C4 live run deferred to wire; C5 live screen fully real"
     }
   ],
   "phaseExecutors": {
     "phase-0": "subagent",
-    "phase-1": "subagent"
+    "phase-1": "subagent",
+    "phase-2": "subagent"
   },
   "contractAddresses": {},
   "env": {},
@@ -89,11 +124,11 @@
     "defaultGateExcludesLive": true
   },
   "ciScaffolded": true,
-  "cre_login_status": "NOT_LOGGED_IN (interactive OAuth needs Dami; wire-phase gate per BUILD-HANDOFF)",
+  "cre_login_status": "NOT_LOGGED_IN; C4 simulate deferred to wire (DEV-204); installed CLI is v1.2.0, no 'workflow build' subcommand",
   "c3_beta_invite_requested": false,
   "verification_commands": [],
   "screenshot_paths": [],
-  "context_percentage": 32,
+  "context_percentage": 48,
   "provenance": {
     "agent_nonce": "49043cf0db415dea459b7329",
     "session": "build-orchestrator-fresh-2026-10-31"

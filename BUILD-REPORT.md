@@ -27,6 +27,10 @@ Each deviation is a DEV-NNN record. Debug phase 2 and wire phase 1 grep for `DEV
 | DEV-002 | packages/core/src/commitment.ts vs test/commitment.test.ts | §12 test calls `commitmentHash(m, 0, "CLEAR")` (3 args incl screenVerdict) | §4 `commitmentHash(p: CommitmentInput)` (single arg) is implemented; test adapted via `commitmentInputFromIvms(m, verdict)` + round-trip assertion | §4 impl is load-bearing (INVARIANT 5, A-G4 #2 COMMITMENT_KEYS round-trip; D-2 excludes screenVerdict from commitment) — §12 test was stale/incompatible | UNTESTED | none — real functions exercised; commitment.ts is the canonical contract the verify.workflow must match in P3 |
 | DEV-003 | packages/core/package.json | test script `vitest run` but vitest/typescript/@types/node undeclared | added vitest+typescript+@types/node as devDependencies; pnpm install clean | test runner was missing from the workspace | DEGRADED | none — test runner now declared |
 | DEV-004 | packages/core/tsconfig.json | (none authored at scaffold) | created strict tsconfig with `moduleResolution: bundler` | gate cmd `tsc --noEmit` had no config; bundler resolution matches the extensionless imports the frozen arch authored (nodenext would force editing frozen source) | DEGRADED | none — build config now present |
+| DEV-201 | packages/ofac/package.json | test script `vitest run`, no vitest dep | added vitest+typescript+@types/node devDeps | scaffold gap (mirrors DEV-003) | COSMETIC | none |
+| DEV-202 | packages/ofac/src/sdn.ts (ARCH §5) | `new XMLParser({...})` without `parseTagValue:false` | added `parseTagValue:false` | **real false-CLEAR bug**: fast-xml-parser coerced hex EVM idNumber `0x7FF9…` to Number → `7.30e+47`, silently dropping a sanctioned address from the index | DEGRADED | FIXED — prevents a sanctions-screen false-negative; live smoke confirms 1058 addrs parse intact |
+| DEV-203 | packages/ofac/src/screen.ts (ARCH §5) | `import fuzz from "fuzzball"` | `import * as fuzz from "fuzzball"` | fuzzball is CommonJS with no default export → `fuzz` was undefined under ESM/vitest (TypeError at `fuzz.token_sort_ratio`) | DEGRADED | FIXED — fuzzy name match now works |
+| DEV-204 | packages/cre/src/screen.workflow.ts (C4, ARCH §8) | `cre workflow build` + `cre workflow simulate` return CLEAR/HIT | workflow authored against real cre-sdk 1.23.0 symbols (EVMClient, HTTPClient, handler, consensusIdenticalAggregation all confirmed real exports); simulate BLOCKED by interactive `cre login` OAuth (headless-impossible) + installed CLI v1.2.0 lacks `workflow build` subcommand | §8 was [UNVERIFIED]; live simulate is a wire-phase gate; NO verdict fabricated | UNTESTED | C4 live run deferred to wire (needs Dami `cre login` + CRE project scaffold); C5 live screen is fully real and covers the P0 OFAC thesis |
 
 ## Failed Attempts & Resolutions
 | Step | Error | Attempts | Resolution |
@@ -45,6 +49,11 @@ Each deviation is a DEV-NNN record. Debug phase 2 and wire phase 1 grep for `DEV
 | 1 | INVARIANT 3 no-AI lint | resolver imports no model/network | clean (imports only ./types, ./citations) | YES |
 | 1 | COMMITMENT_KEYS order | beneVasp, beneficiaryAccount, origVasp, verifyVerdict | exact match (A-G4 #2 round-trip holds) | YES |
 | 1 | `pnpm verify` (clean-room gate, offline+unit) | pass | PASSED | YES |
+| 2 | `pnpm --filter @travelproof/ofac test` | fixture + fail-closed green | 6/6 pass (exact hit, base58 case-sens, EVM case-insens, aka fuzzy, 2x fail-closed SCREEN_DEGRADED) | YES |
+| 2 | LIVE SMOKE (real OFAC feed, P0) | fresh publishDate + Garantex self-check | `publishDate 10/28/2026 addrs 1058` + SELF-CHECK PASS | YES |
+| 2 | no-cached-list grep (src) | 0 | 0 lines | YES |
+| 2 | parser guards | removeNSPrefix+parseTagValue | both present in sdn.ts | YES |
+| 2 | C4 `cre workflow simulate` | CLEAR/HIT | BLOCKED — cre login (interactive OAuth), DEV-204 UNTESTED, wire-phase | DEFERRED |
 
 ## Known Risks (for debug)
 - CRE workflows (C4/C3) require `cre login` (interactive OAuth); not completable headless. Deferred to wire-phase per BUILD-HANDOFF. The P0-thesis slice (C7 contract deploy + no-PII + live OFAC parse) does NOT depend on cre login.
