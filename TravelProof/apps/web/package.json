@@ -1,10 +1,24 @@
 {
   "name": "web",
   "private": true,
-  "scripts": { "dev": "next dev", "build": "next build", "start": "next start", "test": "vitest run" },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "vitest run"
+  },
   "dependencies": {
-    "next": "^15.0.0", "react": "^18.3.0", "react-dom": "^18.3.0",
-    "viem": "^2.0.0", "@react-pdf/renderer": "^3.4.0",
-    "@travelproof/core": "workspace:*"
+    "@react-pdf/renderer": "^3.4.0",
+    "@travelproof/core": "workspace:*",
+    "next": "^15.0.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "viem": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5.4"
   }
 }

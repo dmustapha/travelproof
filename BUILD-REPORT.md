@@ -35,6 +35,11 @@ Each deviation is a DEV-NNN record. Debug phase 2 and wire phase 1 grep for `DEV
 | DEV-302 | contracts/lib (forge install) | `forge install foundry-rs/forge-std --no-commit` | ran `forge install foundry-rs/forge-std` (installed v1.17.0) | Foundry 1.4.4 rejects the `--no-commit` flag (removed) | COSMETIC | none |
 | DEV-303 | contract explorer verification | BaseScan/Etherscan verified | submitted to Sourcify (job 31a51d52…); no ETHERSCAN_API_KEY in env | Etherscan verification needs an API key not provided; Sourcify is the keyless fallback; source committed regardless | COSMETIC | none — contract functions correctly; judges can read committed source + Sourcify |
 | DEV-304 | scripts/run-cre.sh (P3.4b) | wire to real `cre workflow simulate --broadcast`, set CRE_WIRED=1 | KEPT as fail-loud stub (exits 1 WIRE_REQUIRED); real simulate lines present commented, ready to uncomment at wire | the real invocation needs `cre login` (headless-impossible) — per A-G4 SURVIVOR #2 + INVARIANT ESCALATE, a constant PASS here would fabricate every demo CLEARED; keeping it fail-loud is the correct honest state | UNTESTED | run-cre live wiring deferred to wire (same cre login gate); api/run degrades loudly on a non-enum verdict |
+| DEV-401 | apps/web RunRecord + cre.ts→api/run→memo | ARCH §10 RunRecord had no publishDate | threaded `publishDate?: string` end-to-end | CO-1 C requires the live OFAC publishDate in the memo | UNTESTED | none — defaults to explicit "(unavailable)" until the real screen supplies it |
+| DEV-402 | apps/web tsconfig/types/layout | scaffold omitted web tsconfig, @types/*, root layout.tsx/globals.css | created standard Next.js config + installed types + root layout + craft-floor globals.css | required for any web build/render | COSMETIC | none |
+| DEV-403 | apps/web/lib/ledger.ts (CO-1 A) | `readLedger(fromBlock=0n)` | default to contract deploy block 52676285 (override ATTESTATION_DEPLOY_BLOCK) + chunk fallback ≤45k | both Base Sepolia RPCs reject fromBlock:0 ("pruned history" / "50000 block range") | DEGRADED | none (FIXED) — ledger reads live, correct empty state pre-seed |
+| DEV-404 | apps/web/app/api/run/route.ts | ARCH §10 api/run had no try/catch around triggerCreRun | wrapped → 502 DEGRADED with cited reason (A-G4 #2); no bare 500, no fabricated CLEARED | the live CRE-run leg is UNTESTED (cre login deferred; run-cre.sh is the fail-loud stub) | UNTESTED | cockpit renders DEGRADED honestly; live verdict path lights up when CRE wired |
+| DEV-405 | apps/web/app/api/run/route.ts (orchestrator inline fix) | handler 500-crashed on a malformed intent (undefined.primaryIdentifier in buildIvms) | added a fail-closed 400 BAD_REQUEST guard before buildIvms | orchestrator independent render test caught a 500 on a malformed POST; graceful 400 is required (debug/stress would flag the 500) | COSMETIC | none — happy path + honest-degrade unchanged; only malformed input now returns clean 400 |
 
 ## Failed Attempts & Resolutions
 | Step | Error | Attempts | Resolution |
@@ -64,6 +69,15 @@ Each deviation is a DEV-NNN record. Debug phase 2 and wire phase 1 grep for `DEV
 | 3 | C6 `/verify` | registered/401/source | `{registered:true,originatorMatch:true,vaspName:"Beta Exchange Ltd",source:"SYNTHETIC_FALLBACK"}`; 401 on no-key | YES |
 | 3 | run-cre.sh stub | exits 1 WIRE_REQUIRED, no constant verdict | exit=1, fail-loud (A-G4 #2) | YES |
 | 3.2 | **DEPLOY** (real, Base Sepolia) | TravelRuleAttestation: 0x… non-zero forwarder | **0xa8CD17A860f3A0DE51e1135248F22560d4721738**, tx 0x14328bc1…45d8, block 52676285, status 0x1, forwarder 0xF8344C… (read-back on-chain); COMPLIANT audit | YES |
+| 4 | `pnpm --filter web exec tsc --noEmit` | clean | exit 0 | YES |
+| 4 | `pnpm --filter web build` | green, routes emitted | compiled OK; 8 routes (/, /cockpit, /ledger, /proof, /proof/[jobId], /record/[jobId], /record/[jobId]/memo.pdf, /api/run) | YES |
+| 4 | route render (dev, orchestrator) | 200 | 200 for /, /cockpit, /proof, /proof/[jobId], /ledger, /record/[jobId] | YES |
+| 4 | api/run malformed intent | clean 4xx, no 500 | 400 BAD_REQUEST (after DEV-405 inline guard; was 500) | YES |
+| 4 | api/run correct intent (CRE not wired) | honest degrade, no fabricated CLEARED | 502 DEGRADED "CRE runner unavailable… beta access pending" (A-G4 #2) | YES |
+| 4 | api/run non-applicable | 200 classified | 200, rationale "no CASP party; Travel Rule not engaged" | YES |
+| 4 | memo DT-1 citation lint | no 1010.410(f)-as-crypto, no bare "filing" | only "…not a filing" negation + 1010.430 retention cite; no banned string | YES |
+| 4 | no-TEE-quote / beta-label | none / present | no enclaveHash/TEE/ran-live copy; "beta access pending" present | YES |
+| 4 | UI-coverage gate | all 7 observables reachable | PASS (.feature-coverage.json, 0 re-dispatch) | YES |
 
 ## Known Risks (for debug)
 - CRE workflows (C4/C3) require `cre login` (interactive OAuth); not completable headless. Deferred to wire-phase per BUILD-HANDOFF. The P0-thesis slice (C7 contract deploy + no-PII + live OFAC parse) does NOT depend on cre login.

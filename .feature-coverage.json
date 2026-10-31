@@ -1,0 +1,17 @@
+{
+  "schema": "feature-coverage/1",
+  "phase": "phase-4",
+  "phase_builds_ui": true,
+  "slice": [
+    { "id": "F-006", "surface": "apps/web/app/proof/[jobId]/page.tsx#no-pii-panel", "reachable": true },
+    { "id": "F-009", "surface": "apps/web/app/cockpit/page.tsx#status-block (CLEARED/DO_NOT_TRANSMIT/DEGRADED)", "reachable": true },
+    { "id": "F-010", "surface": "apps/web/app/proof/[jobId]/page.tsx (force-dynamic, cold)", "reachable": true },
+    { "id": "F-011", "surface": "apps/web/lib/memo.tsx + apps/web/app/record/[jobId]/page.tsx", "reachable": true },
+    { "id": "CO1-A-ledger", "surface": "apps/web/app/ledger/page.tsx + apps/web/lib/ledger.ts", "reachable": true },
+    { "id": "CO1-C-memo", "surface": "apps/web/lib/memo.tsx -> apps/web/app/record/[jobId]/memo.pdf/route.ts", "reachable": true },
+    { "id": "landing-moneyshot", "surface": "apps/web/app/page.tsx#sample-card", "reachable": true }
+  ],
+  "verdict": "PASS",
+  "redispatch_count": 0,
+  "ts": "2026-10-31T15:55:00Z"
+}

@@ -1,8 +1,8 @@
 {
   "project": "TravelProof",
   "currentPhase": "phase-4",
-  "currentStep": "4.1",
-  "currentSubStep": "4.1.a",
+  "currentStep": "4.3",
+  "currentSubStep": "4.3.seed-deferred",
   "status": "in-progress",
   "autonomous_mode": true,
   "run_profile": "SPRINT",
@@ -28,7 +28,9 @@
     "3.2",
     "3.3",
     "3.4",
-    "3.4b"
+    "3.4b",
+    "4.1",
+    "4.2"
   ],
   "fileGroups": {},
   "deviations": [
@@ -127,13 +129,54 @@
       "reason": "cre login headless-impossible; constant PASS would fabricate verdicts (A-G4)",
       "class": "UNTESTED",
       "impact": "none"
+    },
+    {
+      "step": "4.1",
+      "id": "DEV-401",
+      "description": "threaded publishDate through RunRecord/cre/api/memo",
+      "reason": "CO-1 C live OFAC date in memo",
+      "class": "UNTESTED",
+      "impact": "none"
+    },
+    {
+      "step": "4.1",
+      "id": "DEV-402",
+      "description": "web tsconfig+@types+layout+globals.css created",
+      "reason": "scaffold gap",
+      "class": "COSMETIC",
+      "impact": "none"
+    },
+    {
+      "step": "4.1",
+      "id": "DEV-403",
+      "description": "ledger.ts fromBlock=deployBlock 52676285 + chunked fallback",
+      "reason": "RPCs reject fromBlock:0",
+      "class": "DEGRADED",
+      "impact": "none (FIXED)"
+    },
+    {
+      "step": "4.1",
+      "id": "DEV-404",
+      "description": "api/run try/catch -> 502 DEGRADED on CRE error (A-G4 #2)",
+      "reason": "live CRE leg UNTESTED (cre login deferred)",
+      "class": "UNTESTED",
+      "impact": "cockpit shows honest DEGRADED"
+    },
+    {
+      "step": "4.2",
+      "id": "DEV-405",
+      "description": "orchestrator inline: api/run 400 guard on malformed intent (was 500 crash)",
+      "reason": "robustness; render test caught it",
+      "class": "COSMETIC",
+      "impact": "none"
     }
   ],
   "phaseExecutors": {
     "phase-0": "subagent",
     "phase-1": "subagent",
     "phase-2": "subagent",
-    "phase-3": "subagent + inline(deploy)"
+    "phase-3": "subagent + inline(deploy)",
+    "phase-4": "subagent + inline(400-guard)"
   },
   "contractAddresses": {
     "TravelRuleAttestation": {
@@ -178,10 +221,11 @@
   "c3_beta_invite_requested": "PREPARED (submission/C3-BETA-INVITE-REQUEST.md); form is human-gated, surfaced to Dami",
   "verification_commands": [],
   "screenshot_paths": [],
-  "context_percentage": 62,
+  "context_percentage": 74,
   "provenance": {
     "agent_nonce": "49043cf0db415dea459b7329",
     "session": "build-orchestrator-fresh-2026-10-31"
   },
-  "timestamp": "2026-10-31T15:10:00Z"
+  "timestamp": "2026-10-31T15:10:00Z",
+  "feature_coverage": "PASS (.feature-coverage.json, 7/7 reachable, 0 redispatch)"
 }
