@@ -62,6 +62,11 @@ contract TravelRuleAttestation is IReceiver {
     }
 
     function _maybeEmit(bytes32 jobId, Attestation storage a) internal {
+        // Emit ONLY when BOTH legs have landed. A single leg landing with the default-0 other leg
+        // would otherwise emit verdict=0 (CLEARED) before the OFAC screen ran — a premature
+        // false-CLEARED, the exact false-negative a sanctions tool must never produce. The verdict
+        // is CLEARED iff verify PASSED (0) AND screen is CLEAR (0); any non-zero leg is BLOCKED.
+        if (!(a.verifySet && a.screenSet)) return;
         uint8 verdict = (a.verifyVerdict == 0 && a.screenVerdict == 0) ? 0 : 1; // 0=CLEARED 1=BLOCKED
         emit EnclaveAttestation(jobId, a.commitmentHash, a.ts, verdict);
     }

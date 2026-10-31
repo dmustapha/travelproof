@@ -182,17 +182,20 @@
   },
   "contractAddresses": {
     "TravelRuleAttestation": {
-      "address": "0xa8CD17A860f3A0DE51e1135248F22560d4721738",
+      "address": "0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD",
       "network": "base-sepolia-84532",
-      "txHash": "0x14328bc1f06ec5dfa6b87d503af7e0dd03c4d7593fdb216dc4c7692e3b9545d8",
-      "block": 52676285,
+      "txHash": "0xd8d5d6543e906bb448f50415973aa092c1a5aac97789fe25f230913be94a5530",
+      "block": 52683257,
       "forwarder": "0xF8344CFd5c43616a4366C34E3EEE75af79a74482",
-      "verified": "sourcify-submitted"
-    }
+      "verified": "sourcify-submitted",
+      "note": "re-deployed after peer-review diff-1 premature-CLEARED fix"
+    },
+    "TravelRuleAttestation_superseded": "0xa8CD17A860f3A0DE51e1135248F22560d4721738 (premature-CLEARED bug)"
   },
   "env": {
-    "ATTESTATION_ADDRESS": "0xa8CD17A860f3A0DE51e1135248F22560d4721738",
-    "KEYSTONE_FORWARDER_ADDR": "0xF8344CFd5c43616a4366C34E3EEE75af79a74482"
+    "ATTESTATION_ADDRESS": "0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD",
+    "KEYSTONE_FORWARDER_ADDR": "0xF8344CFd5c43616a4366C34E3EEE75af79a74482",
+    "ATTESTATION_DEPLOY_BLOCK": "52683257"
   },
   "devPort": 3000,
   "depsVerified": true,
@@ -232,5 +235,17 @@
   "feature_coverage": "PASS (.feature-coverage.json, 7/7 reachable, 0 redispatch)",
   "seed_status": "DEFERRED \u2014 run-cre.sh fail-loud (cre login); read path live, zero-code-change on seed",
   "deviationCount": 17,
-  "untestedDeviationCount": 5
+  "untestedDeviationCount": 5,
+  "peer_review": {
+    "ran": true,
+    "advisory": true,
+    "adopted_fix": "diff-1 premature-CLEARED (fixed+re-deployed)",
+    "carries": [
+      "diff-2 workflow-id binding",
+      "diff-3 resolver NaN guard",
+      "diff-4 OFAC timeout/count-floor",
+      "risk-4 event rename"
+    ],
+    "rejected": "bold-2 single-signer attester (no-simulations ruling; surfaced to Dami)"
+  }
 }

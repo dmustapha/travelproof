@@ -10,7 +10,7 @@ _Last updated: build COMPLETE (phases 0-4 + deploy). [x]=done [~]=real-code, liv
 - [~] C4 DON screen workflow (cre) — real code vs cre-sdk 1.23.0; live simulate DEFERRED (cre login, wire)
 - [~] C3 Confidential-HTTP verify workflow (cre) — real code, COMMITMENT_KEYS round-trip; labeled 'beta access pending' (production privacy path, NOT live tonight)
 - [x] C6 VASP registry (vasp-registry) — real TRISA directory lookup (fail-closed SYNTHETIC_FALLBACK disclosed via `source`) + synthetic attribute-match; 401 on no-key
-- [x] C7 TravelRuleAttestation DEPLOYED to Base Sepolia @ 0xa8CD17A860f3A0DE51e1135248F22560d4721738 (tx 0x14328bc1…45d8, block 52676285); 5/5 tests, no-PII struct, real forwarder; compliance COMPLIANT
+- [x] C7 TravelRuleAttestation DEPLOYED to Base Sepolia @ 0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD (tx 0x14328bc1…45d8, block 52676285); 5/5 tests, no-PII struct, real forwarder; compliance COMPLIANT
 - [x] C8 cockpit / C9 record+memo / C10 proof / C11 /ledger (web) — 8 routes build+render 200; CLEARED/DO-NOT-TRANSMIT/DEGRADED real (api/run fails closed, never fabricated CLEARED)
 - [~] Seed: 2 attestations (CLEARED + BLOCKED) — DEFERRED to cre login (run-cre.sh fail-loud stub); read path (readLedger/getAttestation) LIVE against the real contract, populates with zero code change post-seed
 - [ ] Demo video + DoraHacks BUIDL — owned by hackathon-demo @ demo + hackathon-package @ package

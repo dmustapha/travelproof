@@ -84,14 +84,35 @@ Each deviation is a DEV-NNN record. Debug phase 2 and wire phase 1 grep for `DEV
 | 4 | memo DT-1 citation lint | no 1010.410(f)-as-crypto, no bare "filing" | only "…not a filing" negation + 1010.430 retention cite; no banned string | YES |
 | 4 | no-TEE-quote / beta-label | none / present | no enclaveHash/TEE/ran-live copy; "beta access pending" present | YES |
 | 4 | UI-coverage gate | all 7 observables reachable | PASS (.feature-coverage.json, 0 re-dispatch) | YES |
+| PR | **peer-review fix** (diff-1 premature CLEARED) | single leg emits NO event; both-legs-clear emits 1 CLEARED; verify-PASS+screen-HIT emits BLOCKED | forge **8/8** (3 new regression tests); old code would fail the single-leg test | YES |
+| PR | **RE-DEPLOY** (fixed contract) | new addr, non-zero forwarder | **0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD**, tx 0xd8d5d654…a5530, block 52683257, status 0x1, forwarder 0xF8344C (read-back) | YES |
+
+## Peer-review (amplifier) — ADOPTs applied + carries
+- **diff-1 / risk-2 (CRITICAL, ADOPTED + FIXED + RE-DEPLOYED):** `_maybeEmit` emitted verdict=0 CLEARED when a single leg landed (unset leg defaults to 0) → a premature false-CLEARED before the OFAC screen ran. Fixed to emit only when `verifySet && screenSet`; added 3 regression tests (forge 8/8); re-deployed to `0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD`. The one load-bearing correctness defect — now closed. (Full dispositions in PERSPECTIVE-RESPONSE-build.json.)
+- **risk-5 / read-4 (ADOPTED):** test count reconciled (core = 12/12 final; it grew from 9 when the verify-workflow round-trip test landed); Contract Addresses + Env Vars tables below populated.
+- **diff-2 (workflow-identity binding), diff-3 (resolver NaN/Row-5 guard), diff-4 (OFAC timeout + count-floor) — CARRIED to debug:** real hardening, but diff-2 needs the live CRE workflow IDs (cre login, not yet known → avoid an untested second re-deploy), and diff-3 touches the frozen, cross-model-AGREE'd legal truth table (an input-validation guard, not a branch change, is the debug-phase fix). Logged as known risks below.
+- **risk-3 (legal scope EU/FATF-only) — DISCLOSED, not a gap:** US FinCEN is deliberately US-context-only per INVARIANT 4 / D-1 (presenting §1010.410(f) as the crypto authority is the exact misread the citation lint forbids). Scope boundary stands in LIMITATIONS.md.
+- **bold-2 (single-signer EOA attester to fake-fill the ledger tonight) — REJECTED (both models agree):** it would be an attestation NOT from the real CRE DON — conflicts with the Dami "no simulations" ruling + INVARIANT ESCALATE. Surfaced to Dami as a conscious demo-lane decision, never a silent build substitution.
 
 ## Known Risks (for debug)
 - CRE workflows (C4/C3) require `cre login` (interactive OAuth); not completable headless. Deferred to wire-phase per BUILD-HANDOFF. The P0-thesis slice (C7 contract deploy + no-PII + live OFAC parse) does NOT depend on cre login.
+- **[peer-review diff-2]** `onReport` binds to the shared Chainlink forwarder but not to our workflowId/owner (the CRE metadata). Any CRE workflow could pre-write/poison a jobId (write-once makes it permanent). Wire-phase fix: `setExpectedWorkflowId/Author/Name` + decode metadata (needs the real workflow IDs from cre login). Floor tonight = forwarder guard + write-once legs.
+- **[peer-review diff-3]** Resolver: a NaN/negative/Infinity `fiatValueUsd` falls below the threshold (fail-open to reduced-data regime). Debug-phase fix: reject non-finite/negative → NEEDS_HUMAN_REVIEW (an input guard, NOT a truth-table change — the branch logic is frozen cross-model-AGREE'd legal mapping).
+- **[peer-review diff-4]** `sdn.ts` fetch has no explicit timeout and the sanity floor is a char-length check; harden to an AbortSignal timeout + entry/address count floors + a publishDate staleness check. (The fail-closed throw on empty/broken parse already prevents a false CLEAR; this is defense-in-depth.)
+- **[peer-review risk-4]** Event name `EnclaveAttestation` reads as a TEE claim while the docs say "not a TEE quote." Rename to `ComplianceAttestation` in a future contract version (ABI change — deferred to avoid a third re-deploy tonight; the commitment semantics + copy are already honest).
 
 ## Contract Addresses
 | Contract | Network | Address | Tx Hash |
 |----------|---------|---------|---------|
+| TravelRuleAttestation (CURRENT, fixed) | Base Sepolia 84532 | `0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD` | `0xd8d5d6543e906bb448f50415973aa092c1a5aac97789fe25f230913be94a5530` (block 52683257) |
+| TravelRuleAttestation (superseded — premature-CLEARED bug) | Base Sepolia 84532 | `0xa8CD17A860f3A0DE51e1135248F22560d4721738` | `0x14328bc1f06ec5dfa6b87d503af7e0dd03c4d7593fdb216dc4c7692e3b9545d8` (block 52676285) |
+
+Forwarder (both): `0xF8344CFd5c43616a4366C34E3EEE75af79a74482` (official Chainlink CRE Base Sepolia production KeystoneForwarder). Verification: Sourcify job submitted (no ETHERSCAN_API_KEY); source committed.
 
 ## Environment Variables Added
 | Key | Source Step | Value/Description |
 |-----|-----------|-------------------|
+| `KEYSTONE_FORWARDER_ADDR` | 3.2 | `0xF8344CFd5c43616a4366C34E3EEE75af79a74482` (resolved from Chainlink forwarder directory for Base Sepolia) |
+| `ATTESTATION_ADDRESS` | 3.2 / re-deploy | `0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD` (the deployed C7 contract) |
+| `ATTESTATION_DEPLOY_BLOCK` | re-deploy | `52683257` (ledger getLogs fromBlock; RPCs reject fromBlock:0 — DEV-403) |
+| `DEPLOYER_PRIVATE_KEY` | (pre-supplied, gitignored) | Dami dev wallet; synced from wd-root `.env` into `TravelProof/.env` (placeholder had been left in the project copy). NEVER committed. |

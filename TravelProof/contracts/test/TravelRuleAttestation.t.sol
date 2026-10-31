@@ -3,6 +3,7 @@
 pragma solidity 0.8.24;
 
 import {Test} from "forge-std/Test.sol";
+import {Vm} from "forge-std/Vm.sol";
 import {TravelRuleAttestation} from "../src/TravelRuleAttestation.sol";
 
 contract TravelRuleAttestationTest is Test {
@@ -47,5 +48,42 @@ contract TravelRuleAttestationTest is Test {
     function test_zeroForwarderDeployReverts() public {
         vm.expectRevert(TravelRuleAttestation.ZeroForwarder.selector);
         new TravelRuleAttestation(address(0));
+    }
+
+    event EnclaveAttestation(bytes32 indexed jobId, bytes32 commitmentHash, uint64 ts, uint8 verdict);
+
+    // Regression (peer-review diff-1): a single leg landing must NOT emit a premature CLEARED.
+    // The verify leg (PASS=0) lands first with the screen leg still unset (default 0); the OLD
+    // code emitted verdict=0 CLEARED here — a false-clear before the OFAC screen ran.
+    function test_singleLeg_doesNotEmitPrematureCleared() public {
+        vm.prank(forwarder);
+        vm.recordLogs();
+        att.onReport("", abi.encode(jobId, keccak256("c"), uint8(0))); // verify PASS only
+        Vm.Log[] memory logs = vm.getRecordedLogs();
+        assertEq(logs.length, 0, "no event may emit until both legs land");
+    }
+
+    // Both legs landed → exactly one CLEARED event with verdict 0.
+    function test_bothLegsClear_emitsSingleCleared() public {
+        vm.startPrank(forwarder);
+        att.onReport("", abi.encode(jobId, keccak256("c"), uint8(0)));
+        vm.recordLogs();
+        att.onReport("", abi.encode(jobId, uint8(0))); // screen CLEAR → now both set
+        vm.stopPrank();
+        Vm.Log[] memory logs = vm.getRecordedLogs();
+        assertEq(logs.length, 1, "exactly one event when both legs land");
+    }
+
+    // Verify PASS + screen HIT → BLOCKED (verdict 1), never CLEARED.
+    function test_screenHit_emitsBlocked() public {
+        vm.startPrank(forwarder);
+        att.onReport("", abi.encode(jobId, keccak256("c"), uint8(0))); // verify PASS
+        vm.recordLogs();
+        att.onReport("", abi.encode(jobId, uint8(1))); // screen HIT
+        vm.stopPrank();
+        Vm.Log[] memory logs = vm.getRecordedLogs();
+        assertEq(logs.length, 1);
+        (, , uint8 verdict) = abi.decode(logs[0].data, (bytes32, uint64, uint8));
+        assertEq(verdict, 1, "a screen HIT must be BLOCKED, never CLEARED");
     }
 }

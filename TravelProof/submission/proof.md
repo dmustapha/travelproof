@@ -1,11 +1,12 @@
 # TravelProof — on-chain proof
 
 ## Deployed contract
-- **TravelRuleAttestation**: `0xa8CD17A860f3A0DE51e1135248F22560d4721738`
+> Re-deployed after a peer-review finding (diff-1): the first version could emit a premature CLEARED event when a single verdict leg landed. Fixed (_maybeEmit emits only when both legs are set) + 3 regression tests; re-deployed at the address below. Old (superseded): 0xa8CD17A860f3A0DE51e1135248F22560d4721738
+- **TravelRuleAttestation**: `0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD`
 - **Network**: Base Sepolia (chainId 84532)
 - **KeystoneForwarder (constructor)**: `0xF8344CFd5c43616a4366C34E3EEE75af79a74482` (official Chainlink CRE Base Sepolia production forwarder)
-- **Deploy tx**: `0x14328bc1f06ec5dfa6b87d503af7e0dd03c4d7593fdb216dc4c7692e3b9545d8` (block 52676285, status success)
-- **BaseScan**: https://sepolia.basescan.org/address/0xa8CD17A860f3A0DE51e1135248F22560d4721738
+- **Deploy tx**: `0xd8d5d6543e906bb448f50415973aa092c1a5aac97789fe25f230913be94a5530` (block 52683257, status success)
+- **BaseScan**: https://sepolia.basescan.org/address/0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD
 - **Deployer**: 0xc211C942946011859ca634F22400d80570ED12A5
 
 ## No-PII structural proof (INVARIANT 1)

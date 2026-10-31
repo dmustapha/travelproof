@@ -12,7 +12,7 @@ export interface LedgerRow { jobId: `0x${string}`; commitmentHash: `0x${string}`
 // ("pruned history unavailable"), so the default scan starts at the contract deploy block.
 const MAX_RANGE = 45_000n;
 // TravelRuleAttestation deploy block on Base Sepolia (contracts/broadcast run-latest.json).
-const DEPLOY_BLOCK = BigInt(process.env.ATTESTATION_DEPLOY_BLOCK ?? "52676285");
+const DEPLOY_BLOCK = BigInt(process.env.ATTESTATION_DEPLOY_BLOCK ?? "52683257");
 
 type EventLogs = Awaited<ReturnType<typeof publicClient.getLogs<typeof ATTESTATION_EVENT>>>;
 
