@@ -1,19 +1,19 @@
 # Submission status — TravelProof
-_Last updated: forge (planning). build keeps this current as features land._
+_Last updated: build COMPLETE (phases 0-4 + deploy). [x]=done [~]=real-code, live-run deferred to cre login (wire)._
 
 ## Status
 - [x] Blueprints: PRD, ARCHITECTURE, PLAN, INVARIANTS, DECISIONS, LIMITATIONS (forge)
 - [x] C0 Workspace scaffold + franchise skeleton (build phase-0: pnpm workspace + foundry + Next.js stubs, claims ledger, verify-claims recompute gate, SECURITY, DOMAIN-GUIDE, CI, clean-room)
-- [ ] C1 resolver + citation registry (core)
-- [ ] C2 IVMS101 builder + validator (core)
-- [ ] C5 OFAC fetcher/parser + screen against the live feed (ofac)
-- [ ] C4 DON-consensus screen workflow (cre)
-- [ ] C3 Confidential-HTTP verify workflow (cre)
-- [ ] C6 VASP registry verify endpoint (mock + TRISA path)
-- [ ] C7 TravelRuleAttestation deployed to Base Sepolia
-- [ ] C8 cockpit / C9 record+memo / C10 proof page (web)
-- [ ] Seed: CLEARED + BLOCKED attestations on-chain
-- [ ] Demo video (≤300s) + DoraHacks BUIDL
+- [x] C1 resolver + citation registry (core) — 9/9 core tests, deterministic, no-AI lint clean
+- [x] C2 IVMS101 builder + validator (core) — C1/C6 constraints + keccak256 commitment round-trip
+- [x] C5 OFAC live screen (ofac) — live smoke publishDate 10/28/2026, 1058 addrs, Garantex HIT self-check PASS; fixed 2 false-CLEAR bugs
+- [~] C4 DON screen workflow (cre) — real code vs cre-sdk 1.23.0; live simulate DEFERRED (cre login, wire)
+- [~] C3 Confidential-HTTP verify workflow (cre) — real code, COMMITMENT_KEYS round-trip; labeled 'beta access pending' (production privacy path, NOT live tonight)
+- [x] C6 VASP registry (vasp-registry) — real TRISA directory lookup (fail-closed SYNTHETIC_FALLBACK disclosed via `source`) + synthetic attribute-match; 401 on no-key
+- [x] C7 TravelRuleAttestation DEPLOYED to Base Sepolia @ 0xa8CD17A860f3A0DE51e1135248F22560d4721738 (tx 0x14328bc1…45d8, block 52676285); 5/5 tests, no-PII struct, real forwarder; compliance COMPLIANT
+- [x] C8 cockpit / C9 record+memo / C10 proof / C11 /ledger (web) — 8 routes build+render 200; CLEARED/DO-NOT-TRANSMIT/DEGRADED real (api/run fails closed, never fabricated CLEARED)
+- [~] Seed: 2 attestations (CLEARED + BLOCKED) — DEFERRED to cre login (run-cre.sh fail-loud stub); read path (readLedger/getAttestation) LIVE against the real contract, populates with zero code change post-seed
+- [ ] Demo video + DoraHacks BUIDL — owned by hackathon-demo @ demo + hackathon-package @ package
 
 ## Known limitations / blockers
 - CRE runs REAL managed-DON (Dami ruling; ghostfund-v2 reference). C4 OFAC-screen + C7 attestation are real on Base Sepolia. Only C3 Confidential HTTP is gated on the Confidential Workflows private-beta invite — request now; simulate is the C3-only fallback if the invite does not land (honest, disclosed). See CRE-RUN-MODEL.md.

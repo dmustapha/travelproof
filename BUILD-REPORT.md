@@ -5,7 +5,13 @@ Builder: hackathon-build skill (orchestrator; per-phase implementation subagents
 ## Summary
 | Phase | Steps | Status | Notes |
 |-------|-------|--------|-------|
-| phase-0 | 0.1, 0.2 | COMPLETE | scaffold + franchise skeleton; 6 workspace members linked; verify:claims green |
+| phase-0 | 0.1, 0.2 | COMPLETE | scaffold + franchise skeleton; 6 workspace members; verify:claims green |
+| phase-1 | 1.1-1.3 | COMPLETE | legal core; 12/12 core tests; COMMITMENT_KEYS round-trip |
+| phase-2 | 2.1, 2.2 | COMPLETE | C5 live OFAC real (smoke green); C4 code-real, sim deferred (cre login) |
+| phase-3 | 3.1-3.4b | COMPLETE | C7 DEPLOYED @ 0xa8CD17A8..1738 (5/5, COMPLIANT); C6 real TRISA; C3 code-real; run-cre fail-loud |
+| phase-4 | 4.1, 4.2 | COMPLETE | web 8 routes build+render; api/run fails closed; UI-coverage 7/7 |
+| phase-4.3 | seed | DEFERRED | 2 attestations need cre login; read path live |
+| phase-5 | demo/package | OWNED-ELSEWHERE | hackathon-demo + hackathon-package |
 
 ## Pre-build facts verified by orchestrator
 | Fact | Command | Result |

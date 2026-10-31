@@ -14,5 +14,7 @@ On-chain storage struct `Attestation` holds ONLY: bytes32 commitmentHash, uint8 
 ## Live OFAC (INVARIANT 2)
 Live SDN feed smoke (orchestrator-verified): publishDate 10/28/2026, 1058 crypto addresses indexed, Garantex demo HIT self-check PASS.
 
-## Attestations (seeded at P4.3)
-_pending seed run (two attestations: CLEARED + DO-NOT-TRANSMIT)_
+## Attestations (P4.3 seed — DEFERRED to cre login)
+The two live attestations (CLEARED + DO-NOT-TRANSMIT) are produced by `scripts/run-cre.sh` driving the real CRE verify+screen workflows and broadcasting to C7. That runner is a FAIL-LOUD stub pending `cre login` (interactive OAuth — needs Dami) + the CRE project scaffold (wire phase). It will NEVER emit a constant/fabricated verdict (A-G4 #2); `api/run` fails closed to 502 DEGRADED until wired.
+- **Read path is LIVE now:** `readLedger()` + `getAttestation()` query the real contract 0xa8CD17A8...1738 (currently 0 rows — correct empty state). The moment the seed runs, `/ledger` + `/proof/[jobId]` populate with zero code change.
+- **The thesis is already proven live tonight:** the no-PII contract is deployed + on-chain-readable, the OFAC screen hits the live SDN feed (publishDate 10/28/2026, Garantex HIT self-check PASS), the commitment round-trips (verify:claims green).

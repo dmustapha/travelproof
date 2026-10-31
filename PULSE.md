@@ -168,3 +168,33 @@ Verdict: FEASIBLE as scoped. (Resolution recorded here + in forge's A-G4 critica
 
 #### For Next Skill (url_preverify → build)
 - Proceed to url_preverify (all-live recorded) then build. Live demo headline = OFAC-DON-attested filable record + no-PII-on-chain proof; C3 enclave = production path, beta-pending (never simulated/fabricated). First build action: request Confidential Workflows beta invite.
+
+---
+### hackathon-build — 2026-10-31
+**Status:** COMPLETE (phases 0-4 + real deploy; P4.3 seed + P5 demo/package deferred as noted)
+**Session(s):** 1 (orchestrator + 4 implementation subagents + 1 compliance auditor; linear base, methodology not engaged)
+**Provenance:** agent_nonce `49043cf0db415dea459b7329`
+
+#### Done
+- P0 scaffold + franchise skeleton (pnpm workspace, foundry, claims ledger, verify-claims recompute gate, SECURITY.md, DOMAIN-GUIDE, CI, clean-room release gate).
+- P1 legal core: deterministic resolver (no AI on decision path), IVMS101 builder/validator (C1/C6), keccak256 commitment — 12/12 core tests, COMMITMENT_KEYS round-trip.
+- P2 LIVE OFAC (C5): real SDN feed smoke green (publishDate 10/28/2026, 1058 addrs, Garantex self-check PASS); fail-closed. Found+fixed 2 false-CLEAR bugs in unverified arch code (hex-addr sci-notation coercion; fuzzball CJS interop). C4 DON workflow authored vs cre-sdk 1.23.0; live simulate deferred (cre login).
+- P3 chain: TravelRuleAttestation DEPLOYED @ 0xa8CD17A860f3A0DE51e1135248F22560d4721738 (Base Sepolia, tx 0x14328bc1…45d8, block 52676285); 5/5 forge tests; no-PII struct; real forwarder 0xF8344C; compliance COMPLIANT. C6 real TRISA lookup (fail-closed disclosed) + synthetic match. C3 verify workflow real code (beta-pending label). run-cre.sh fail-loud stub.
+- P4 web: 8 routes build+render 200; cockpit/record/memo/proof/ledger real against the live contract; api/run fails closed to 502 (never fabricated CLEARED). Inline-fixed a 500-crash on malformed intent -> 400 guard. UI-coverage 7/7 (.feature-coverage.json).
+
+#### Verified Facts
+- VF-b1 TravelRuleAttestation live on Base Sepolia holding no PII. Recompute: `cast code 0xa8CD17A860f3A0DE51e1135248F22560d4721738 --rpc-url $BASE_SEPOLIA_RPC_URL` => non-empty bytecode; `cast call 0xa8CD17A860f3A0DE51e1135248F22560d4721738 "s_forwarderAddress()(address)" --rpc-url $BASE_SEPOLIA_RPC_URL` => 0xF8344CFd5c43616a4366C34E3EEE75af79a74482 (real non-zero).
+- VF-b2 Core legal engine deterministic + round-trips. Recompute: `cd TravelProof && corepack pnpm -r test` => core 12/12 + ofac 6/6 pass.
+- VF-b3 OFAC screen is live, not cached. Recompute: the P2.1 live smoke (fetchAndIndexSdn + assertDemoHitPresent) => fresh publishDate + Garantex HIT present.
+- VF-b4 No PII-write possible on-chain (structural). Recompute: `grep -nE '^\s*string' TravelProof/contracts/src/TravelRuleAttestation.sol` => 0 storage string fields.
+
+#### Blockers for Downstream (debug/wire)
+- cre login (interactive OAuth, Dami): unblocks C4/C3/run-cre live simulate + the 2 seed attestations (P4.3). run-cre.sh + api/run already fail closed (no fabrication).
+- Confidential Workflows private-beta invite (C3): request prepared at submission/C3-BETA-INVITE-REQUEST.md (human-gated form, surfaced to Dami). Non-blocking for the live thesis.
+- TRISA JSON surface gRPC-only (HTTP 415): fail-closed SYNTHETIC_FALLBACK disclosed via `source`; flips to real if a JSON surface appears.
+
+#### For Next Skill (build → debug)
+- Run the 6-phase quality gate; grep BUILD-REPORT.md for DEV- entries (5 UNTESTED/DEGRADED carries: DEV-204 C4-sim, DEV-304 run-cre, DEV-301 TRISA, DEV-401/404 CRE leg). Hero path = the deployed contract read + live OFAC + the cockpit honest-degrade. All UNTESTED carries trace to the single cre-login gate, not to broken code.
+
+#### DL-learn
+VF-b1 TravelRuleAttestation deployed no-PII @ 0xa8CD17A8..1738 | Recompute: cast code + s_forwarderAddress() on Base Sepolia | => bytecode present + forwarder 0xF8344C

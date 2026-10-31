@@ -1,9 +1,9 @@
 {
   "project": "TravelProof",
-  "currentPhase": "phase-4",
-  "currentStep": "4.3",
-  "currentSubStep": "4.3.seed-deferred",
-  "status": "in-progress",
+  "currentPhase": "phase-5",
+  "currentStep": "complete",
+  "currentSubStep": "done",
+  "status": "complete",
   "autonomous_mode": true,
   "run_profile": "SPRINT",
   "methodology_engaged": false,
@@ -30,7 +30,9 @@
     "3.4",
     "3.4b",
     "4.1",
-    "4.2"
+    "4.2",
+    "4.3-deferred(seed:cre-login)",
+    "5-owned-by-demo/package/wire"
   ],
   "fileGroups": {},
   "deviations": [
@@ -221,11 +223,14 @@
   "c3_beta_invite_requested": "PREPARED (submission/C3-BETA-INVITE-REQUEST.md); form is human-gated, surfaced to Dami",
   "verification_commands": [],
   "screenshot_paths": [],
-  "context_percentage": 74,
+  "context_percentage": 86,
   "provenance": {
     "agent_nonce": "49043cf0db415dea459b7329",
     "session": "build-orchestrator-fresh-2026-10-31"
   },
-  "timestamp": "2026-10-31T15:10:00Z",
-  "feature_coverage": "PASS (.feature-coverage.json, 7/7 reachable, 0 redispatch)"
+  "timestamp": "2026-10-31T16:10:00Z",
+  "feature_coverage": "PASS (.feature-coverage.json, 7/7 reachable, 0 redispatch)",
+  "seed_status": "DEFERRED \u2014 run-cre.sh fail-loud (cre login); read path live, zero-code-change on seed",
+  "deviationCount": 17,
+  "untestedDeviationCount": 5
 }
