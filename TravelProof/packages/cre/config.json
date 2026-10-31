@@ -1,0 +1,9 @@
+{
+  "schedule": "0 */5 * * * *",
+  "vaspVerifyUrl": "${VASP_VERIFY_URL}",
+  "ofacSdnUrl": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML",
+  "receiver": "${ATTESTATION_ADDRESS}",
+  "gasLimit": "500000",
+  "chainName": "ethereum-testnet-sepolia-base-1",
+  "chainSelector": "10344971235874465080"
+}

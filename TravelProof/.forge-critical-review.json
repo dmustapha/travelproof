@@ -1,0 +1,58 @@
+{
+  "producer_model": "claude-opus-4-8",
+  "engine": "shared-pipeline/crossmodel-lead.sh style; distinct-model Agent (sonnet) blind per-doc review",
+  "ts": "2026-10-30",
+  "reviews": [
+    {
+      "doc": "PRD.md",
+      "reviewer_model": "claude-sonnet-4-6",
+      "peer_available": true,
+      "findings": [
+        { "severity": "BLOCKER", "note": "run-cre.sh stub emitted a hardcoded passing verdict, fabricating every demo CLEARED", "predicate": "grep -n 'echo.*verifyVerdict' scripts/run-cre.sh returns 0 matches in the wired build; api/run rejects non-enum verdicts" },
+        { "severity": "BLOCKER", "note": "commitment computed over different field sets in verify.workflow (4) vs commitment.ts (6) — round-trip would always fail", "predicate": "the key array in verify.workflow.ts equals COMMITMENT_KEYS in commitment.ts; pnpm verify:claims returns match:true" },
+        { "severity": "WARN", "note": "seed-demo wrote screenVerdict SEE_CHAIN into the commitment input, guaranteeing a verify:claims mismatch", "predicate": "grep SEE_CHAIN scripts/seed-demo.ts returns 0; claims.json carries CommitmentInput (no screenVerdict)" },
+        { "severity": "WARN", "note": "FinCEN citation invented a decimal subsection 4.5.1 not present in FIN-2019-G001", "predicate": "grep '4.5.1' packages/core/src/citations.ts returns 0" },
+        { "severity": "WARN", "note": "Appendix P data contract listed matchedUid in the C4 on-chain report though the report encodes only (jobId, screenVerdict)", "predicate": "PRD Appendix P C4->C7 row reads abi(jobId, screenVerdict) with matchedUid marked UI-only" },
+        { "severity": "NIT", "note": "Appendix K row 3 cited EU Art.14(5) for unhosted-wallet obligations instead of Art.16", "predicate": "EUR-Lex 2023/1113 Art.14(5) covers inability-to-obtain-beneficiary-info; the row now cites Art.16 for unhosted" }
+      ],
+      "survivors": [
+        "run-cre.sh must never emit a constant verdict; api/run rejects any non-enum verdict",
+        "verify.workflow commitment and commitment.ts must share COMMITMENT_KEYS order (round-trip)",
+        "cite FinCEN FIN-2019-G001 without a decimal subsection (no fabricated section)"
+      ]
+    },
+    {
+      "doc": "ARCHITECTURE.md",
+      "reviewer_model": "claude-sonnet-4-6",
+      "peer_available": true,
+      "findings": [
+        { "severity": "BLOCKER", "note": "TravelRuleAttestation had no write-once guard; a second verify report for a jobId could overwrite/flip a CLEARED attestation", "predicate": "_processReport reverts AlreadySet on a second verify leg; test_doubleVerifyReverts_noFlip passes" },
+        { "severity": "BLOCKER", "note": "lib/cre.ts + run-cre.sh stub flowed a sentinel verdict into the on-chain commitment", "predicate": "api/run validates screenVerdict in {CLEAR,HIT,DEGRADED} before attesting; returns 502 DEGRADED otherwise" },
+        { "severity": "WARN", "note": "forwarder guard had a zero-address bypass; a deploy with KEYSTONE_FORWARDER_ADDR=0x0 let any caller write", "predicate": "constructor reverts ZeroForwarder on address(0); onReport has no address(0) escape; test_zeroForwarderDeployReverts passes" },
+        { "severity": "WARN", "note": "cockpit hardcoded originatorIsCasp:true so the non-CASP / applicable:false paths were unreachable from the UI", "predicate": "cockpit reads form.get('origCasp'); an origCasp checkbox exists" },
+        { "severity": "WARN", "note": "fast-xml-parser without removeNSPrefix could yield an empty index on the namespaced feed -> silent CLEAR", "predicate": "parseSdn sets removeNSPrefix:true and throws SCREEN_DEGRADED when sdnList missing or entries==0" }
+      ],
+      "survivors": [
+        "attestation verdict legs are write-once; a second report for a jobId leg reverts (no flip)",
+        "TravelRuleAttestation forwarder must be non-zero; always enforce msg.sender==forwarder",
+        "OFAC parse fails closed on an empty/namespace-broken index (never a false CLEAR)",
+        "run-cre.sh must never emit a constant verdict; api/run rejects any non-enum verdict"
+      ]
+    },
+    {
+      "doc": "PLAN.md",
+      "reviewer_model": "claude-sonnet-4-6",
+      "peer_available": true,
+      "findings": [
+        { "severity": "BLOCKER", "note": "Phase 2 gate grep (no .xml under src/) missed the committed fixture and did not check that src never references a local XML as the data source", "predicate": "Phase 2 gate greps packages/ofac/src packages/cre/src for fixtures/sdn|.xml -> 0; fixture under test/ is allowed" },
+        { "severity": "WARN", "note": "no PLAN task wired run-cre.sh from the stub to the real cre invocation", "predicate": "PLAN has Task P3.4b that replaces the WIRE_REQUIRED stub and sets CRE_WIRED=1" },
+        { "severity": "WARN", "note": "P3 gate deferred the commitment round-trip entirely to P4, leaving no recovery time for a mismatch", "predicate": "Phase 3 gate includes a commitment round-trip equality item (simulate commitment == commitment.ts recompute)" },
+        { "severity": "NIT", "note": "N+6 transcript showed matchedUid in the screen simulate output though the report excludes it", "predicate": "N+6 P2.2 transcript shows screenVerdict only; matchedUid labeled UI-only" }
+      ],
+      "survivors": [
+        "attestation verdict legs are write-once; a second report for a jobId leg reverts (no flip)",
+        "verify.workflow commitment and commitment.ts must share COMMITMENT_KEYS order (round-trip)"
+      ]
+    }
+  ]
+}

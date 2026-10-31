@@ -1,0 +1,102 @@
+{
+  "project": "TravelProof",
+  "currentPhase": "phase-2",
+  "currentStep": "2.1",
+  "currentSubStep": "2.1.a",
+  "status": "in-progress",
+  "autonomous_mode": true,
+  "run_profile": "SPRINT",
+  "methodology_engaged": false,
+  "app_root": "/Users/MAC/bli-legal/TravelProof",
+  "expected_phases": [
+    "phase-0",
+    "phase-1",
+    "phase-2",
+    "phase-3",
+    "phase-4",
+    "phase-5"
+  ],
+  "completedSteps": [
+    "0.1",
+    "0.2",
+    "1.1",
+    "1.2",
+    "1.3"
+  ],
+  "fileGroups": {},
+  "deviations": [
+    {
+      "step": "0.2",
+      "id": "DEV-001",
+      "description": "verify-claims.ts uses dynamic (loop-body) imports for @travelproof/core/commitment + apps/web/lib/chain instead of top-level statics",
+      "reason": "those modules are authored in later phases; static import would fail empty-ledger gate",
+      "class": "COSMETIC",
+      "impact": "none"
+    },
+    {
+      "step": "1.3",
+      "id": "DEV-002",
+      "description": "commitment.ts uses single-arg CommitmentInput signature (\u00a74 canonical) over stale \u00a712 3-arg test; test adapted via commitmentInputFromIvms",
+      "reason": "\u00a74 is load-bearing for A-G4 #2 round-trip; D-2 excludes screenVerdict",
+      "class": "UNTESTED",
+      "impact": "none"
+    },
+    {
+      "step": "1.1",
+      "id": "DEV-003",
+      "description": "added vitest+typescript+@types/node devDeps to core",
+      "reason": "test runner undeclared",
+      "class": "DEGRADED",
+      "impact": "none"
+    },
+    {
+      "step": "1.1",
+      "id": "DEV-004",
+      "description": "created packages/core/tsconfig.json moduleResolution:bundler",
+      "reason": "tsc gate had no config; bundler matches extensionless frozen imports",
+      "class": "DEGRADED",
+      "impact": "none"
+    }
+  ],
+  "phaseExecutors": {
+    "phase-0": "subagent",
+    "phase-1": "subagent"
+  },
+  "contractAddresses": {},
+  "env": {},
+  "devPort": 3000,
+  "depsVerified": true,
+  "invariantsConsumed": true,
+  "franchiseSkeletonScaffolded": {
+    "claimsLedger": true,
+    "claimsJsonStub": true,
+    "recomputeVerifier": true,
+    "securityMd": true,
+    "honestyLedger": true
+  },
+  "repoLayoutScaffolded": {
+    "evidenceDir": true,
+    "sponsorAdapter": "packages/cre"
+  },
+  "cleanRoomScaffolded": {
+    "script": "scripts/clean-room.sh",
+    "oneCommandGate": "pnpm verify"
+  },
+  "testTiersScaffolded": {
+    "offlineGlob": "*.test.ts",
+    "integrationGlob": "*.integration.ts",
+    "liveGlob": "*.live.ts",
+    "defaultGateExcludesLive": true
+  },
+  "ciScaffolded": true,
+  "cre_login_status": "NOT_LOGGED_IN (interactive OAuth needs Dami; wire-phase gate per BUILD-HANDOFF)",
+  "c3_beta_invite_requested": false,
+  "verification_commands": [],
+  "screenshot_paths": [],
+  "context_percentage": 32,
+  "provenance": {
+    "agent_nonce": "49043cf0db415dea459b7329",
+    "session": "build-orchestrator-fresh-2026-10-31"
+  },
+  "timestamp": "2026-10-31T15:10:00Z"
+}

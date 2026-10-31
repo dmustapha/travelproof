@@ -1,0 +1,13 @@
+{
+  "name": "travelproof",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test && forge test -C contracts",
+    "seed": "tsx scripts/seed-demo.ts",
+    "verify:claims": "tsx scripts/verify-claims.ts",
+    "verify": "bash scripts/clean-room.sh"
+  },
+  "devDependencies": { "tsx": "^4.0.0", "typescript": "^5.4.0" }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "@travelproof/cre",
+  "type": "module",
+  "dependencies": { "@chainlink/cre-sdk": "1.23.0", "viem": "^2.0.0", "@travelproof/ofac": "workspace:*" },
+  "scripts": { "build": "cre workflow build", "simulate": "cre workflow simulate" }
+}

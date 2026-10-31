@@ -1,0 +1,10 @@
+# File: contracts/foundry.toml
+[profile.default]
+src = "src"
+test = "test"
+script = "script"
+solc = "0.8.24"
+remappings = ["forge-std/=lib/forge-std/src/"]
+
+[rpc_endpoints]
+base_sepolia = "${BASE_SEPOLIA_RPC_URL}"

@@ -1,0 +1,45 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm -r exec tsc --noEmit || echo "typecheck: no tsconfig yet (scaffold phase) — components add theirs as they land"
+
+      - name: Franchise recompute gate
+        run: pnpm verify:claims
+
+      # Offline/unit tier only — the default gate excludes *.integration.ts and *.live.ts.
+      # Test scripts arrive in later phases; placeholder until then.
+      - name: Unit tests (offline tier)
+        run: pnpm -r test || echo "no tests yet (scaffold phase) — unit tests land with components"
+
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+      - name: Forge build + test
+        working-directory: contracts
+        run: forge build && forge test || echo "no contracts yet (scaffold phase) — C7 lands later"

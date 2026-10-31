@@ -1,0 +1,7 @@
+{
+  "name": "@travelproof/ofac",
+  "type": "module",
+  "exports": { "./sdn": "./src/sdn.ts", "./screen": "./src/screen.ts" },
+  "dependencies": { "fast-xml-parser": "^4.4.0", "fuzzball": "^2.1.3" },
+  "scripts": { "test": "vitest run" }
+}

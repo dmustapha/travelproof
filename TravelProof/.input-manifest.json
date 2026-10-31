@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "generated_by": "hackathon-forge",
+  "project": "TravelProof",
+  "inputs": [
+    {
+      "id": "BASE_SEPOLIA_RPC_URL",
+      "category": "live-config",
+      "tier": "required",
+      "used_by": "C7 deploy + C10 reads",
+      "how_to_obtain": "Alchemy/Infura dashboard, or the public https://sepolia.base.org",
+      "required_before": "build",
+      "status": "resolved",
+      "value_ref": "Dami Alchemy key TESTED live (base-sepolia.g.alchemy.com) \u2014 in .env"
+    },
+    {
+      "id": "BASE_SEPOLIA_RPC_FALLBACK",
+      "category": "live-config",
+      "tier": "optional",
+      "used_by": "C10 proof page fallback",
+      "how_to_obtain": "a second RPC provider (publicnode/Ankr)",
+      "required_before": "demo",
+      "status": "resolved",
+      "value_ref": "default public fallback set"
+    },
+    {
+      "id": "DEPLOYER_PRIVATE_KEY",
+      "category": "credential",
+      "tier": "required",
+      "used_by": "C7 contract deploy",
+      "how_to_obtain": "create a fresh testnet key (cast wallet new) and fund via a Base Sepolia faucet",
+      "required_before": "build",
+      "status": "resolved-at-build",
+      "value_ref": "Dami dev wallet 0xc211..12A5 (Base Sepolia ~0.0585 ETH, no bridge needed); private key supplied at build from his dev wallet"
+    },
+    {
+      "id": "KEYSTONE_FORWARDER_ADDR",
+      "category": "contract-addr",
+      "tier": "deferred-until-wire",
+      "used_by": "C7 constructor (forwarder guard)",
+      "how_to_obtain": "CRE docs/CLI \u2014 the KeystoneForwarder address for Base Sepolia",
+      "required_before": "deploy",
+      "status": "unresolved",
+      "value_ref": null
+    },
+    {
+      "id": "VASP_VERIFY_URL",
+      "category": "live-config",
+      "tier": "deferred-until-wire",
+      "used_by": "C3 verify workflow + C6 endpoint",
+      "how_to_obtain": "URL of our deployed VASP registry verify endpoint (mock; TRISA in prod)",
+      "required_before": "wire",
+      "status": "unresolved",
+      "value_ref": null
+    },
+    {
+      "id": "VASP_VERIFY_KEY",
+      "category": "credential",
+      "tier": "deferred-until-wire",
+      "used_by": "C3 (bearer auth, in-enclave)",
+      "how_to_obtain": "generate a bearer token; register as a CRE Vault DON secret {{.VASP_VERIFY_KEY}}",
+      "required_before": "wire",
+      "status": "unresolved",
+      "value_ref": null
+    },
+    {
+      "id": "OFAC_SDN_URL",
+      "category": "live-config",
+      "tier": "required",
+      "used_by": "C5 live SDN fetch",
+      "how_to_obtain": "fixed: sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML (verified live, probe P1)",
+      "required_before": "build",
+      "status": "resolved",
+      "value_ref": "fixed default"
+    },
+    {
+      "id": "DEMO_HIT_ADDRESS",
+      "category": "live-config",
+      "tier": "optional",
+      "used_by": "C5 startup self-check + demo flip",
+      "how_to_obtain": "fixed: Garantex 3Lpoy53K625zVeE47ZasiG5jGkAxJ27kh1 (XBT, CYBER4, active); re-verify day-of",
+      "required_before": "demo",
+      "status": "resolved",
+      "value_ref": "fixed default"
+    },
+    {
+      "id": "ATTESTATION_ADDRESS",
+      "category": "contract-addr",
+      "tier": "deferred-until-deploy",
+      "used_by": "C9/C10 reads",
+      "how_to_obtain": "recorded at C7 deploy (P3.2)",
+      "required_before": "demo",
+      "status": "unresolved",
+      "value_ref": null
+    },
+    {
+      "id": "CRE_WORKFLOW_TARGET",
+      "category": "live-config",
+      "tier": "required",
+      "used_by": "C3/C4 workflow chain target",
+      "how_to_obtain": "fixed: ethereum-testnet-sepolia-base-1 (selector 10344971235874465080)",
+      "required_before": "wire",
+      "status": "resolved",
+      "value_ref": "fixed default"
+    },
+    {
+      "id": "CRE_ACCOUNT_LOGIN",
+      "category": "approval",
+      "tier": "deferred-until-wire",
+      "used_by": "cre workflow simulate (demo path)",
+      "how_to_obtain": "cre login (Chainlink CRE account); cre whoami to confirm",
+      "required_before": "wire",
+      "status": "likely-held",
+      "value_ref": "ghostfund-v2 implies cre account access already granted; confirm at wire"
+    },
+    {
+      "id": "CRE_DEPLOY_ALLOWLIST",
+      "category": "approval",
+      "tier": "optional",
+      "used_by": "managed-DON deploy (NOT needed for the simulate demo path)",
+      "how_to_obtain": "cre account access (allowlist request)",
+      "required_before": "deploy",
+      "status": "likely-held",
+      "value_ref": "ghostfund-v2 did a real CRE deploy \u2192 allowlist likely granted; confirm cre account access at wire"
+    },
+    {
+      "id": "CRE_CONFIDENTIAL_BETA",
+      "category": "approval",
+      "tier": "required-for-C3",
+      "used_by": "Confidential HTTP in a managed-DON deploy",
+      "how_to_obtain": "Confidential Workflows private-beta Google Form",
+      "required_before": "deploy",
+      "status": "unresolved-request-now",
+      "value_ref": "Dami prefers REAL (no simulate); this is the ONE gated piece for C3 Confidential HTTP \u2014 request the private-beta invite immediately (CRE-RUN-MODEL.md)"
+    },
+    {
+      "id": "TRISA_DIRECTORY",
+      "category": "live-config",
+      "tier": "optional",
+      "used_by": "C6 production path (VASP registry)",
+      "how_to_obtain": "TRISA testnet directory endpoint",
+      "required_before": "deploy",
+      "status": "unresolved",
+      "value_ref": "mock used for the demo; TRISA is the disclosed production path"
+    }
+  ],
+  "cre_run_model": "REAL managed-DON (Dami ruling; ghostfund-v2 reference) \u2014 see TravelProof/CRE-RUN-MODEL.md; simulate is NOT the plan"
+}

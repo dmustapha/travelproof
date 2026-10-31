@@ -1,0 +1,1 @@
+{ "name": "@travelproof/vasp-registry", "type": "commonjs", "scripts": { "start": "tsx src/server.ts" }, "devDependencies": { "tsx": "^4.0.0" } }
