@@ -2,8 +2,8 @@
 
 | Phase | Verdict | Reason | State status | Updated |
 |---|---|---|---|---|
-| intel | pass | — | complete | 2026-10-31T15:22:50Z |
-| warroom | pass | — | complete | 2026-10-31T15:22:50Z |
-| forge | fail | doc-sync: spec-freeze ratchet: doc(s) [INVARIANTS.md, LIMITATIONS.md, warroom/WINNER-BRIEF.md, .input-manifest.json] changed after the spec froze with NO change-order entry — a post-freeze spec change must ratchet (WA-PS-266 freeze half / WA-R-044) | complete | 2026-10-31T15:22:59Z |
-| critique | pass_with_blockers | chrome/vanity self-honesty scan not run (2.4 G4) | complete | 2026-10-31T15:22:59Z |
-| build | fail | claims-stub: claimsJsonStub=true but docs/pipeline/claims.json absent | complete | 2026-10-31T15:22:59Z |
+| intel | pass | — | complete | 2026-10-31T15:37:10Z |
+| warroom | pass | — | complete | 2026-10-31T15:37:10Z |
+| forge | fail | doc-sync: spec-freeze ratchet: doc(s) [INVARIANTS.md, LIMITATIONS.md, warroom/WINNER-BRIEF.md, .input-manifest.json] changed after the spec froze with NO change-order entry — a post-freeze spec change must ratchet (WA-PS-266 freeze half / WA-R-044) | complete | 2026-10-31T15:37:19Z |
+| critique | pass_with_blockers | chrome/vanity self-honesty scan not run (2.4 G4) | complete | 2026-10-31T15:37:19Z |
+| build | fail | cleanroom-script: declared clean-room script 'scripts/clean-room.sh' physically absent or empty (build must ship a real script, not a placeholder) | complete | 2026-10-31T15:37:19Z |
