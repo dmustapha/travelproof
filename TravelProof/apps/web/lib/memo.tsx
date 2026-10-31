@@ -52,7 +52,7 @@ const s = StyleSheet.create({
   void: { position: "absolute", top: 92, left: 262, fontFamily: "Courier", fontSize: 13, letterSpacing: 2.5, color: STOP, opacity: 0.22, borderWidth: 1.5, borderColor: STOP, paddingHorizontal: 6, paddingVertical: 3, transform: "rotate(-4deg)" },
 });
 const Row = ({ k, v, mono }: { k: string; v?: string; mono?: boolean }) => (
-  <View style={s.row} wrap={false}><Text style={s.k}>{k}</Text><Text style={[s.v, mono ? s.mono : {}]}>{v ?? "—"}</Text></View>
+  <View style={s.row} wrap={false}><Text style={s.k}>{k}</Text><Text style={[s.v, mono ? s.mono : {}]}>{v ?? "-"}</Text></View>
 );
 
 function PdfSeal({ cleared, size = 78, attested = false }: { cleared: boolean; size?: number; attested?: boolean }) {

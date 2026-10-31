@@ -25,7 +25,7 @@ export default async function Proof({ params }: { params: Promise<{ jobId: strin
       <header className="proof-head">
         <span className={`badge ${verdict === "CLEARED" ? "badge-ok" : "badge-block"}`}>{verdict}</span>
         <h1>On-chain attestation</h1>
-        <p className="meta">Read cold from Base Sepolia — no wallet, no login.</p>
+        <p className="meta">Read cold from Base Sepolia - no wallet, no login.</p>
       </header>
       <table className="att-table">
         <tbody>

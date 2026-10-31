@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# clean-room.sh — the ONE release-gate command (`pnpm verify`).
+# clean-room.sh - the ONE release-gate command (`pnpm verify`).
 # Proves the project builds and recomputes from a fresh clone with no leaked secrets and zero drift.
 # Offline only: the default gate excludes *.integration.ts and *.live.ts (those need live creds).
 set -euo pipefail
@@ -11,7 +11,7 @@ echo "== clean-room gate @ $ROOT =="
 # 1. Clone-fresh guard: a release build must never depend on an uncommitted working-tree file.
 if command -v git >/dev/null 2>&1 && git rev-parse --git-dir >/dev/null 2>&1; then
   if [ -n "$(git status --porcelain 2>/dev/null || true)" ]; then
-    echo "WARN  working tree has uncommitted changes — a true clean-room runs from a fresh clone."
+    echo "WARN  working tree has uncommitted changes - a true clean-room runs from a fresh clone."
   else
     echo "OK    working tree clean (clone-fresh guard)"
   fi
@@ -27,13 +27,13 @@ if git grep -nIE '0x[a-fA-F0-9]{64}' -- . ':!*.example' ':!*.md' 2>/dev/null \
   echo "FAIL  a 64-hex secret-shaped string is tracked outside *.example"; LEAK=1
 fi
 if git ls-files 2>/dev/null | grep -qxE '\.env'; then
-  echo "FAIL  .env is tracked — it must be gitignored"; LEAK=1
+  echo "FAIL  .env is tracked - it must be gitignored"; LEAK=1
 fi
 [ "$LEAK" -eq 0 ] && echo "OK    no leaked secrets detected"
 
 # 3. Offline tests (default tier excludes integration/live).
 echo "-- offline unit tier --"
-pnpm -r test || echo "no tests yet (scaffold phase) — unit tests land with components"
+pnpm -r test || echo "no tests yet (scaffold phase) - unit tests land with components"
 
 # 4. Regenerate evidence via the recompute verifier (refuses read-back).
 echo "-- recompute gate --"

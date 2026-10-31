@@ -12,7 +12,7 @@ const SCREEN_VERDICTS = ["CLEAR", "HIT", "DEGRADED"] as const;
 export async function POST(req: NextRequest) {
   // Parse fail-closed: a non-JSON / empty body throws SyntaxError in req.json() and would
   // surface as an opaque 500 before the shape guard below ever runs. Catch it as a clean 400
-  // (same discipline as the missing-fields guard — never a swallowed 500).
+  // (same discipline as the missing-fields guard - never a swallowed 500).
   let intent: TransferIntent;
   try {
     intent = (await req.json()) as TransferIntent;
@@ -48,17 +48,17 @@ export async function POST(req: NextRequest) {
   const salt = String(Date.now());
   const jobId = jobIdFor(intent.beneficiaryChainAddress, salt);
   // Trigger the dual CRE run (verify + screen). Returns real verdicts + tx hashes.
-  // Fail-loud: if the runner is not wired (ENOENT) or errors, degrade to 502 — NEVER a 500 that
+  // Fail-loud: if the runner is not wired (ENOENT) or errors, degrade to 502 - NEVER a 500 that
   // swallows the cause, and NEVER a fabricated CLEARED (A-G4 #2). The UI renders this honestly.
   let verifyVerdict: number, screenVerdict: string, txHashes: string[], publishDate: string | undefined;
   try {
     ({ verifyVerdict, screenVerdict, txHashes, publishDate } = await triggerCreRun(jobId, intent, ivms));
   } catch (e) {
     const reason = e instanceof Error ? e.message : String(e);
-    return NextResponse.json({ stage: "DEGRADED", reason: `CRE runner unavailable: ${reason}. Wire the runner (CRE_WIRED=1) — the in-enclave verify is CRE Confidential Workflows, beta access pending.` }, { status: 502 });
+    return NextResponse.json({ stage: "DEGRADED", reason: `CRE runner unavailable: ${reason}. Wire the runner (CRE_WIRED=1) - the in-enclave verify is CRE Confidential Workflows, beta access pending.` }, { status: 502 });
   }
   // Fail-closed: the CRE runner MUST return a real enum verdict. A sentinel/unknown value (the
-  // run-cre.sh-not-wired failure mode) is rejected, never attested — prevents fabricated state.
+  // run-cre.sh-not-wired failure mode) is rejected, never attested - prevents fabricated state.
   if (!SCREEN_VERDICTS.includes(screenVerdict as ScreenVerdict) || ![0, 1, 2].includes(verifyVerdict)) {
     return NextResponse.json({ stage: "DEGRADED", reason: "CRE runner returned a non-enum verdict (not wired?)", verifyVerdict, screenVerdict }, { status: 502 });
   }

@@ -1,4 +1,4 @@
-// File: apps/web/app/cockpit/page.tsx — the officer's workstation: case rail | intake slip | verdict plate.
+// File: apps/web/app/cockpit/page.tsx - the officer's workstation: case rail | intake slip | verdict plate.
 "use client";
 import { useState } from "react";
 import { Seal, gatesFor, type GateState } from "../../components/Seal";

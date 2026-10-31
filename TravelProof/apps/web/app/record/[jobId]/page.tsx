@@ -2,7 +2,7 @@ import { getRun } from "../../../lib/runStore";
 import { readAttestation, attestationMatches } from "../../../lib/attest";
 import { RecordDocument } from "../../../components/RecordDocument";
 
-// Depends on the ephemeral run store + live chain — request-time only.
+// Depends on the ephemeral run store + live chain - request-time only.
 export const dynamic = "force-dynamic";
 
 export default async function Record({ params }: { params: Promise<{ jobId: string }> }) {
@@ -22,7 +22,7 @@ export default async function Record({ params }: { params: Promise<{ jobId: stri
     <main className="record">
       <nav className="crumbs"><a href="/cockpit">Cockpit</a> / record <a className="pill pill-solid" href={`/record/${jobId}/memo.pdf`}>Download memo (PDF)</a></nav>
       <RecordDocument run={run} attested={attestationMatches(run, att)} />
-      <p className="verify-note">{attestationMatches(run, att) ? <a href={`/proof/${jobId}`}>The ledger holds no personal data — verify the attestation cold</a> : <span>Attestation not yet readable on-chain; nothing is claimed until it is.</span>}{run.txHash && <> · <a href={`https://sepolia.basescan.org/tx/${run.txHash}`}>BaseScan transaction</a></>}</p>
+      <p className="verify-note">{attestationMatches(run, att) ? <a href={`/proof/${jobId}`}>The ledger holds no personal data - verify the attestation cold</a> : <span>Attestation not yet readable on-chain; nothing is claimed until it is.</span>}{run.txHash && <> · <a href={`https://sepolia.basescan.org/tx/${run.txHash}`}>BaseScan transaction</a></>}</p>
     </main>
   );
 }

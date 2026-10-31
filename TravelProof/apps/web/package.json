@@ -5,7 +5,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "tsx --test lib/chain.test.ts lib/outcome.test.ts"
+    "test": "tsx --test lib/chain.test.ts lib/outcome.test.ts lib/outcome.stress.test.ts"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",

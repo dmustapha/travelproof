@@ -1,8 +1,8 @@
-# ARCHITECTURE — TravelProof
+# ARCHITECTURE - TravelProof
 
-> **THE SINGLE SOURCE OF TRUTH.** Every line of code, every config, every address. A developer with zero context builds TravelProof by copying from this document. Every code block carries a `// File:` header and a verification tag: `[VERIFIED]` (from official docs/probe), `[UNVERIFIED]` (pattern found, not run — carries a `// WARNING: UNVERIFIED`), `[ASSUMED]` (no source — carries a `// CAUTION: ASSUMED`).
+> **THE SINGLE SOURCE OF TRUTH.** Every line of code, every config, every address. A developer with zero context builds TravelProof by copying from this document. Every code block carries a `// File:` header and a verification tag: `[VERIFIED]` (from official docs/probe), `[UNVERIFIED]` (pattern found, not run - carries a `// WARNING: UNVERIFIED`), `[ASSUMED]` (no source - carries a `// CAUTION: ASSUMED`).
 >
-> **Module dependency direction (one-way):** the deterministic core (`packages/core`) imports nothing outward — no I/O, no SDK, no network. The adapters (CRE workflows, OFAC fetcher, contract client, web) depend inward on the core, never the reverse. Each external coupling is quarantined to one adapter directory.
+> **Module dependency direction (one-way):** the deterministic core (`packages/core`) imports nothing outward - no I/O, no SDK, no network. The adapters (CRE workflows, OFAC fetcher, contract client, web) depend inward on the core, never the reverse. Each external coupling is quarantined to one adapter directory.
 
 ---
 
@@ -33,7 +33,7 @@ travelproof/
 ├── pnpm-workspace.yaml
 ├── .env.example
 ├── packages/
-│   ├── core/                         # DETERMINISTIC CORE — imports nothing outward
+│   ├── core/                         # DETERMINISTIC CORE - imports nothing outward
 │   │   ├── src/
 │   │   │   ├── types.ts              # shared domain types (no logic)
 │   │   │   ├── citations.ts          # frozen citation registry
@@ -107,7 +107,7 @@ travelproof/
 | C3 Verify Workflow | CRE TS | `packages/cre/src/verify.workflow.ts` | in-enclave VASP/originator verify | cre-sdk, C6 |
 | C4 Screen Workflow | CRE TS | `packages/cre/src/screen.workflow.ts` | DON-consensus live OFAC screen | cre-sdk, C5 |
 | C5 OFAC Fetcher/Screen | TS (ofac) | `packages/ofac/src/sdn.ts`, `screen.ts` | fetch + parse + index + screen | fast-xml-parser, fuzzball |
-| C6 VASP Registry EP | TS service | `packages/vasp-registry/src/server.ts` | the confidential endpoint target | — |
+| C6 VASP Registry EP | TS service | `packages/vasp-registry/src/server.ts` | the confidential endpoint target | - |
 | C7 Attestation | Solidity | `contracts/src/TravelRuleAttestation.sol` | store commitment+verdicts, emit event | IReceiver, forwarder |
 | C8 Cockpit | Next.js | `apps/web/app/cockpit/page.tsx` | officer entry + status | C1, C2, api/run |
 | C9 Renderer | TS/React | `apps/web/lib/memo.tsx` | record + memo + PDF | C2, C7 read |
@@ -119,11 +119,11 @@ travelproof/
 16 builds / 572 registered; ClearRelease (sanctions screen), LexProof/PREDGE (notarize). 0 Travel-Rule builds. TravelProof's differentiator: the filable IVMS101 record + the verify-but-hide paradox + correct citations.
 
 #### Conceptual Foundation (warroom primitives)
-Adapts F28 (in-circuit compliance — the DON-signed verdict IS the record), F30 (Confidential HTTP enclave verify), F11 (attested audit registry), F37 (deterministic resolver, LLM capped), F08x (the document is the interface).
+Adapts F28 (in-circuit compliance - the DON-signed verdict IS the record), F30 (Confidential HTTP enclave verify), F11 (attested audit registry), F37 (deterministic resolver, LLM capped), F08x (the document is the interface).
 
 ---
 
-## Section 3: C1 — Deterministic Travel Rule Resolver
+## Section 3: C1 - Deterministic Travel Rule Resolver
 
 ### Purpose
 Pure, statute-encoded applicability decision + required-fields derivation. No network, no AI. Implements the Appendix-K truth table from the PRD.
@@ -134,7 +134,7 @@ Pure, statute-encoded applicability decision + required-fields derivation. No ne
 ### Code
 
 #### File: packages/core/src/types.ts
-[VERIFIED] — Source: IVMS 101.2023 spec (research subagent) + PRD §4
+[VERIFIED] - Source: IVMS 101.2023 spec (research subagent) + PRD §4
 ```typescript
 // File: packages/core/src/types.ts
 export type Regime = "EU_TFR" | "FATF_REC16" | "BOTH" | "NONE";
@@ -210,7 +210,7 @@ export interface ValidationResult {
 ```
 
 #### File: packages/core/src/citations.ts
-[VERIFIED] — Source: EUR-Lex 2023/1113, FATF Oct-2021 Guidance, FinCEN FIN-2019-G001, OFAC FAQ 562 (research subagent)
+[VERIFIED] - Source: EUR-Lex 2023/1113, FATF Oct-2021 Guidance, FinCEN FIN-2019-G001, OFAC FAQ 562 (research subagent)
 ```typescript
 // File: packages/core/src/citations.ts
 // Frozen citation registry. No citation is composed ad-hoc. Verb-correct (transmittal, never "file").
@@ -220,7 +220,7 @@ export const CITATIONS = {
   EU_TFR_APPLY: "Regulation (EU) 2023/1113; applicable from 30 December 2024",
   FATF_REC16: "FATF Recommendation 16 (Travel Rule); FATF Updated Guidance VA/VASP (Oct 2021) paras 177-184",
   FATF_DEMINIMIS: "FATF de-minimis threshold USD/EUR 1,000 (INR.16 para 21)",
-  FINCEN_CTX: "31 CFR 1010.410(f) (Travel Rule) / 1010.410(e) (Recordkeeping Rule); FinCEN Guidance FIN-2019-G001 (9 May 2019) — CVC exchangers are money transmitters reached by the general $3,000 transmittal rule; no crypto-specific FinCEN Travel Rule exists",
+  FINCEN_CTX: "31 CFR 1010.410(f) (Travel Rule) / 1010.410(e) (Recordkeeping Rule); FinCEN Guidance FIN-2019-G001 (9 May 2019) - CVC exchangers are money transmitters reached by the general $3,000 transmittal rule; no crypto-specific FinCEN Travel Rule exists",
   OFAC_SDN: "OFAC SDN List identifier 'Digital Currency Address - XBT/ETH'; OFAC FAQ 562",
 } as const;
 
@@ -235,7 +235,7 @@ export const BANNED_CITATION_PATTERNS: RegExp[] = [
 ```
 
 #### File: packages/core/src/resolver.ts
-[VERIFIED] — Source: PRD Appendix K truth table + citations registry
+[VERIFIED] - Source: PRD Appendix K truth table + citations registry
 ```typescript
 // File: packages/core/src/resolver.ts
 import type { TransferIntent, Applicability } from "./types";
@@ -332,11 +332,11 @@ export function classify(intent: TransferIntent): Applicability {
 Truth-table decision (auditable, reproducible); `NEEDS_HUMAN_REVIEW` on unknown CASP status; citations only from the frozen registry.
 
 ### Verified / Unverified Status
-All [VERIFIED] — pure logic over the spike-verified citation facts.
+All [VERIFIED] - pure logic over the spike-verified citation facts.
 
 ---
 
-## Section 4: C2 — IVMS101 Record Builder + Validator
+## Section 4: C2 - IVMS101 Record Builder + Validator
 
 ### Purpose
 Assemble an IVMS 101.2023 message from the intent and enforce constraints C1 (≥1 of geographicAddress[GEOG/HOME/BIZZ]/customerIdentification/nationalIdentification/dateAndPlaceOfBirth) and C6 (≥1 nameIdentifierType = LEGL).
@@ -347,7 +347,7 @@ Assemble an IVMS 101.2023 message from the intent and enforce constraints C1 (�
 ### Code
 
 #### File: packages/core/src/ivms.ts
-[VERIFIED] — Source: IVMS 101.2023 constraints C1/C6 (research subagent)
+[VERIFIED] - Source: IVMS 101.2023 constraints C1/C6 (research subagent)
 ```typescript
 // File: packages/core/src/ivms.ts
 import type { TransferIntent, IvmsMessage, NaturalPerson, Person, LegalPerson, ValidationResult } from "./types";
@@ -420,13 +420,13 @@ export function validateIvms(msg: IvmsMessage): ValidationResult {
 ```
 
 #### File: packages/core/src/commitment.ts
-[VERIFIED] — Source: PRD Appendix C round-trip rule; keccak256 via viem
+[VERIFIED] - Source: PRD Appendix C round-trip rule; keccak256 via viem
 ```typescript
 // File: packages/core/src/commitment.ts
 import { keccak256, toHex, stringToBytes } from "viem";
 import type { IvmsMessage } from "./types";
 
-// The commitment anchors the VERIFY-side payload the enclave processed — the exact fields the
+// The commitment anchors the VERIFY-side payload the enclave processed - the exact fields the
 // CRE verify workflow has at report time (NOT the screen verdict, which is a separate parallel
 // DON verdict, and NOT the originator name, which the workflow sees only as a hash). ONE canonical
 // serialization, used identically by verify.workflow.ts and verify-claims.ts (round-trip).
@@ -471,7 +471,7 @@ All [VERIFIED].
 
 ---
 
-## Section 5: C5 — OFAC SDN Fetcher / Parser / Screen
+## Section 5: C5 - OFAC SDN Fetcher / Parser / Screen
 
 ### Purpose
 Fetch the LIVE SDN.XML (follow 302 → S3), stream-parse, index Digital Currency Address ids + aka names, and screen an address (exact) / name (fuzzy). No cached fallback list exists.
@@ -482,7 +482,7 @@ Fetch the LIVE SDN.XML (follow 302 → S3), stream-parse, index Digital Currency
 ### Code
 
 #### File: packages/ofac/src/sdn.ts
-[VERIFIED] — Source: OFAC SDN.XML schema (research subagent) + probe P1 (feed live, 302→S3)
+[VERIFIED] - Source: OFAC SDN.XML schema (research subagent) + probe P1 (feed live, 302→S3)
 ```typescript
 // File: packages/ofac/src/sdn.ts
 import { XMLParser } from "fast-xml-parser";
@@ -514,11 +514,11 @@ export function parseSdn(xml: string): SdnIndex {
   const parser = new XMLParser({ ignoreAttributes: false, removeNSPrefix: true, isArray: (name) => ["sdnEntry", "id", "aka"].includes(name) });
   const doc = parser.parse(xml);
   const list = doc.sdnList;
-  if (!list) throw new Error("SCREEN_DEGRADED: SDN.XML root <sdnList> not found (parse/namespace failure) — refusing to screen against an empty index");
+  if (!list) throw new Error("SCREEN_DEGRADED: SDN.XML root <sdnList> not found (parse/namespace failure) - refusing to screen against an empty index");
   const pub = list.publshInformation ?? {}; // NOTE: OFAC's element is misspelled "publshInformation"
   const entries: any[] = list.sdnEntry ?? [];
   // Fail-closed: a real feed has thousands of entries. An empty parse must NOT yield a CLEAR screen.
-  if (entries.length === 0) throw new Error("SCREEN_DEGRADED: SDN.XML parsed to 0 entries — refusing a false CLEAR");
+  if (entries.length === 0) throw new Error("SCREEN_DEGRADED: SDN.XML parsed to 0 entries - refusing a false CLEAR");
 
   const addresses = new Set<string>();
   const addressesLower = new Set<string>();
@@ -563,7 +563,7 @@ export function assertDemoHitPresent(idx: SdnIndex, demoAddr: string): void {
 ```
 
 #### File: packages/ofac/src/screen.ts
-[VERIFIED] — Source: screening practice (research subagent): exact addr, fuzzy name
+[VERIFIED] - Source: screening practice (research subagent): exact addr, fuzzy name
 ```typescript
 // File: packages/ofac/src/screen.ts
 import fuzz from "fuzzball";
@@ -575,7 +575,7 @@ export function screenAddress(idx: SdnIndex, addr: string): { hit: boolean; uid?
   if (isEvm(addr)) {
     return { hit: idx.addressesLower.has(addr.toLowerCase()) }; // EVM case-insensitive
   }
-  return { hit: idx.addresses.has(addr) }; // base58 case-sensitive — do NOT lowercase
+  return { hit: idx.addresses.has(addr) }; // base58 case-sensitive - do NOT lowercase
 }
 
 export function screenName(idx: SdnIndex, name: string, threshold = 85): { hit: boolean; uid?: string; score?: number } {
@@ -597,7 +597,7 @@ Flat legacy SDN.XML (address directly in `<idList>/<id>/<idNumber>`); no cached 
 
 ---
 
-## Section 6: C6 — VASP Registry Verify Endpoint (mock + TRISA production path)
+## Section 6: C6 - VASP Registry Verify Endpoint (mock + TRISA production path)
 
 ### Purpose
 The confidential endpoint the enclave (C3) calls. Returns VASP registration + originator match. Mock data, disclosed; production path = TRISA testnet directory.
@@ -605,7 +605,7 @@ The confidential endpoint the enclave (C3) calls. Returns VASP registration + or
 ### Code
 
 #### File: packages/vasp-registry/src/server.ts
-[VERIFIED] — Source: standard Node http service; PRD §A2
+[VERIFIED] - Source: standard Node http service; PRD §A2
 ```typescript
 // File: packages/vasp-registry/src/server.ts
 import { createServer } from "node:http";
@@ -657,7 +657,7 @@ Disclosed mock + named TRISA production path; bearer auth via CRE Vault DON secr
 
 ---
 
-## Section 7: C3 — CRE Confidential-HTTP Verify Workflow
+## Section 7: C3 - CRE Confidential-HTTP Verify Workflow
 
 ### Purpose
 In-enclave verification; PII→enclave, only `{commitmentHash, verifyVerdict}`→chain via a DON-signed report.
@@ -668,7 +668,7 @@ In-enclave verification; PII→enclave, only `{commitmentHash, verifyVerdict}`�
 ### Code
 
 #### File: packages/cre/src/config.ts
-[VERIFIED] — Source: docs.chain.link/crec/supported-networks (Base Sepolia selector)
+[VERIFIED] - Source: docs.chain.link/crec/supported-networks (Base Sepolia selector)
 ```typescript
 // File: packages/cre/src/config.ts
 export interface CreConfig {
@@ -688,10 +688,10 @@ export const BASE_SEPOLIA = {
 ```
 
 #### File: packages/cre/src/verify.workflow.ts
-[UNVERIFIED] — Source: docs.chain.link/cre/.../using-confidential-http-client/making-requests-ts (API shape verified; not run here — wire-gate Risk-5)
+[UNVERIFIED] - Source: docs.chain.link/cre/.../using-confidential-http-client/making-requests-ts (API shape verified; not run here - wire-gate Risk-5)
 ```typescript
 // File: packages/cre/src/verify.workflow.ts
-// WARNING: UNVERIFIED PATTERN — validate in `cre workflow simulate` at wire before relying on it.
+// WARNING: UNVERIFIED PATTERN - validate in `cre workflow simulate` at wire before relying on it.
 import { ConfidentialHTTPClient, EVMClient, handler, HTTPClient } from "@chainlink/cre-sdk";
 import { encodeAbiParameters, parseAbiParameters, keccak256, stringToBytes } from "viem";
 import type { CreConfig } from "./config";
@@ -719,7 +719,7 @@ export const initWorkflow = (config: CreConfig) => {
       })
       .result();
 
-    let verifyVerdict = 2; // DEGRADED by default — fail-closed
+    let verifyVerdict = 2; // DEGRADED by default - fail-closed
     if (resp.ok()) {
       const parsed = resp.json() as { registered: boolean; originatorMatch: boolean };
       verifyVerdict = parsed.registered && parsed.originatorMatch ? 0 : 1; // 0=PASS 1=FAIL
@@ -754,14 +754,14 @@ export const initWorkflow = (config: CreConfig) => {
 ```
 
 ### Key Decisions
-Confidential HTTP (not a normal fetch); `encryptOutput:true`; verdict fail-closed to DEGRADED; commitment computed in-enclave (honest, not a TEE quote — INVARIANT 5).
+Confidential HTTP (not a normal fetch); `encryptOutput:true`; verdict fail-closed to DEGRADED; commitment computed in-enclave (honest, not a TEE quote - INVARIANT 5).
 
 ### Verified / Unverified Status
-[UNVERIFIED] — API shapes from docs; run `cre workflow simulate` at wire (DT-5).
+[UNVERIFIED] - API shapes from docs; run `cre workflow simulate` at wire (DT-5).
 
 ---
 
-## Section 8: C4 — CRE DON-Consensus OFAC Screen Workflow
+## Section 8: C4 - CRE DON-Consensus OFAC Screen Workflow
 
 ### Purpose
 Byzantine-quorum screen against the live SDN feed; agreed verdict signed into the report.
@@ -769,10 +769,10 @@ Byzantine-quorum screen against the live SDN feed; agreed verdict signed into th
 ### Code
 
 #### File: packages/cre/src/screen.workflow.ts
-[UNVERIFIED] — Source: docs.chain.link/cre/reference/sdk/consensus-ts (consensusIdenticalAggregation)
+[UNVERIFIED] - Source: docs.chain.link/cre/reference/sdk/consensus-ts (consensusIdenticalAggregation)
 ```typescript
 // File: packages/cre/src/screen.workflow.ts
-// WARNING: UNVERIFIED PATTERN — validate in `cre workflow simulate` at wire.
+// WARNING: UNVERIFIED PATTERN - validate in `cre workflow simulate` at wire.
 import { EVMClient, HTTPClient, handler, consensusIdenticalAggregation } from "@chainlink/cre-sdk";
 import { encodeAbiParameters, parseAbiParameters } from "viem";
 import { fetchAndIndexSdn, assertDemoHitPresent } from "@travelproof/ofac/sdn";
@@ -817,11 +817,11 @@ export const initWorkflow = (config: CreConfig) => {
 `consensusIdenticalAggregation` (Byzantine-exact, not median); `.withDefault("DEGRADED")` never defaults to CLEAR; each node hits the live feed.
 
 ### Verified / Unverified Status
-[UNVERIFIED] — consensus API from docs; wire-gate.
+[UNVERIFIED] - consensus API from docs; wire-gate.
 
 ---
 
-## Section 9: C7 — TravelRuleAttestation (Solidity, Base Sepolia)
+## Section 9: C7 - TravelRuleAttestation (Solidity, Base Sepolia)
 
 ### Purpose
 Receive DON-signed reports via KeystoneForwarder; store commitment + verdicts; emit `EnclaveAttestation`. No PII-typed field exists (structural invariant).
@@ -829,7 +829,7 @@ Receive DON-signed reports via KeystoneForwarder; store commitment + verdicts; e
 ### Code
 
 #### File: contracts/src/interfaces/IReceiver.sol
-[VERIFIED] — Source: docs.chain.link/cre/.../building-consumer-contracts
+[VERIFIED] - Source: docs.chain.link/cre/.../building-consumer-contracts
 ```solidity
 // File: contracts/src/interfaces/IReceiver.sol
 // SPDX-License-Identifier: MIT
@@ -843,7 +843,7 @@ interface IReceiver is IERC165 {
 ```
 
 #### File: contracts/src/TravelRuleAttestation.sol
-[VERIFIED] — Source: ReceiverTemplate pattern (docs) + PRD Appendix C
+[VERIFIED] - Source: ReceiverTemplate pattern (docs) + PRD Appendix C
 ```solidity
 // File: contracts/src/TravelRuleAttestation.sol
 // SPDX-License-Identifier: MIT
@@ -851,11 +851,11 @@ pragma solidity 0.8.24;
 
 import {IReceiver, IERC165} from "./interfaces/IReceiver.sol";
 
-/// @notice Stores DON-attested Travel Rule verdicts. Holds NO PII — there is no string/bytes
+/// @notice Stores DON-attested Travel Rule verdicts. Holds NO PII - there is no string/bytes
 /// identity field in storage, so a PII write is unrepresentable (INVARIANTS section 1, structural).
 contract TravelRuleAttestation is IReceiver {
     struct Attestation {
-        bytes32 commitmentHash; // keccak256(canonical verified-claims payload) — NOT a TEE quote
+        bytes32 commitmentHash; // keccak256(canonical verified-claims payload) - NOT a TEE quote
         uint8 verifyVerdict;    // 0=PASS 1=FAIL 2=DEGRADED
         uint8 screenVerdict;    // 0=CLEAR 1=HIT 2=DEGRADED
         uint64 ts;
@@ -879,7 +879,7 @@ contract TravelRuleAttestation is IReceiver {
     }
 
     function onReport(bytes calldata, bytes calldata report) external override {
-        // Always enforce — no zero-address bypass (the constructor already forbids a zero forwarder).
+        // Always enforce - no zero-address bypass (the constructor already forbids a zero forwarder).
         if (msg.sender != s_forwarderAddress) revert OnlyForwarder();
         _processReport(report);
     }
@@ -929,7 +929,7 @@ contract TravelRuleAttestation is IReceiver {
 ```
 
 #### File: contracts/script/Deploy.s.sol
-[VERIFIED] — Source: Foundry script pattern
+[VERIFIED] - Source: Foundry script pattern
 ```solidity
 // File: contracts/script/Deploy.s.sol
 // SPDX-License-Identifier: MIT
@@ -951,7 +951,7 @@ contract Deploy is Script {
 ```
 
 #### File: contracts/test/TravelRuleAttestation.t.sol
-[VERIFIED] — Source: forge-std test pattern
+[VERIFIED] - Source: forge-std test pattern
 ```solidity
 // File: contracts/test/TravelRuleAttestation.t.sol
 // SPDX-License-Identifier: MIT
@@ -1025,11 +1025,11 @@ base_sepolia = "${BASE_SEPOLIA_RPC_URL}"
 No PII-typed field (structural invariant); report shape discriminated by length; forwarder-guarded; two verdicts stored, single rollup emitted.
 
 ### Verified / Unverified Status
-[VERIFIED] — standard Foundry/Solidity + the documented ReceiverTemplate guard.
+[VERIFIED] - standard Foundry/Solidity + the documented ReceiverTemplate guard.
 
 ---
 
-## Section 10: C8/C9/C10 — Web (Next.js officer cockpit, renderer, proof page)
+## Section 10: C8/C9/C10 - Web (Next.js officer cockpit, renderer, proof page)
 
 ### Purpose
 The lawyer's view (C8), the filable record + memo (C9), the cold-verifiable proof page (C10), and the orchestration API wiring C1/C2 + the CRE run.
@@ -1040,7 +1040,7 @@ The lawyer's view (C8), the filable record + memo (C9), the cold-verifiable proo
 ### Code
 
 #### File: apps/web/lib/chain.ts
-[VERIFIED] — Source: viem publicClient + probe P2 (chainId 84532)
+[VERIFIED] - Source: viem publicClient + probe P2 (chainId 84532)
 ```typescript
 // File: apps/web/lib/chain.ts
 import { createPublicClient, http, type Address } from "viem";
@@ -1072,7 +1072,7 @@ export async function getAttestation(jobId: `0x${string}`): Promise<AttestationV
 ```
 
 #### File: apps/web/lib/runStore.ts
-[VERIFIED] — ephemeral in-memory store (no PII persisted publicly)
+[VERIFIED] - ephemeral in-memory store (no PII persisted publicly)
 ```typescript
 // File: apps/web/lib/runStore.ts
 import type { IvmsMessage, Applicability } from "@travelproof/core/types";
@@ -1084,7 +1084,7 @@ export function getRun(jobId: string): RunRecord | undefined { return store.get(
 ```
 
 #### File: apps/web/app/api/run/route.ts
-[VERIFIED] — Next.js route handler orchestrating C1/C2 + CRE trigger
+[VERIFIED] - Next.js route handler orchestrating C1/C2 + CRE trigger
 ```typescript
 // File: apps/web/app/api/run/route.ts
 import { NextRequest, NextResponse } from "next/server";
@@ -1113,7 +1113,7 @@ export async function POST(req: NextRequest) {
   // Trigger the dual CRE run (verify + screen). Returns real verdicts + tx hashes.
   const { verifyVerdict, screenVerdict, txHashes } = await triggerCreRun(jobId, intent, ivms);
   // Fail-closed: the CRE runner MUST return a real enum verdict. A sentinel/unknown value (the
-  // run-cre.sh-not-wired failure mode) is rejected, never attested — prevents fabricated state.
+  // run-cre.sh-not-wired failure mode) is rejected, never attested - prevents fabricated state.
   if (!SCREEN_VERDICTS.includes(screenVerdict as ScreenVerdict) || ![0, 1, 2].includes(verifyVerdict)) {
     return NextResponse.json({ stage: "DEGRADED", reason: "CRE runner returned a non-enum verdict (not wired?)", verifyVerdict, screenVerdict }, { status: 502 });
   }
@@ -1125,10 +1125,10 @@ export async function POST(req: NextRequest) {
 ```
 
 #### File: apps/web/lib/cre.ts
-[UNVERIFIED] — Source: invokes the CRE run (simulate/broadcast) or a wire-provided runner
+[UNVERIFIED] - Source: invokes the CRE run (simulate/broadcast) or a wire-provided runner
 ```typescript
 // File: apps/web/lib/cre.ts
-// WARNING: UNVERIFIED PATTERN — at wire this shells out to `cre workflow simulate --broadcast`
+// WARNING: UNVERIFIED PATTERN - at wire this shells out to `cre workflow simulate --broadcast`
 // or calls a thin runner service. The verdicts returned MUST come from the real run, never fabricated.
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
@@ -1144,7 +1144,7 @@ export async function triggerCreRun(jobId: `0x${string}`, intent: TransferIntent
 ```
 
 #### File: apps/web/app/cockpit/page.tsx
-[VERIFIED] — Source: Next.js App Router client component; state machine in PRD Appendix L
+[VERIFIED] - Source: Next.js App Router client component; state machine in PRD Appendix L
 ```typescript
 // File: apps/web/app/cockpit/page.tsx
 "use client";
@@ -1174,7 +1174,7 @@ export default function Cockpit() {
 
   return (
     <main className="cockpit">
-      <h1>TravelProof — Compliance Cockpit</h1>
+      <h1>TravelProof - Compliance Cockpit</h1>
       <form action={submit}>
         <input name="amount" aria-label="Amount" defaultValue="5000" />
         <input name="asset" aria-label="Asset" defaultValue="USDC" />
@@ -1189,8 +1189,8 @@ export default function Cockpit() {
         <button type="submit">Classify + verify + screen</button>
       </form>
       {result?.applicability && <div className="banner">{result.applicability.citation || result.applicability.rationale}</div>}
-      {stage === "CLEARED" && <a className="ok" href={`/record/${result.jobId}`}>CLEARED — open filable record</a>}
-      {stage === "DO_NOT_TRANSMIT" && <div className="block">DO NOT TRANSMIT — {result.screenVerdict === "HIT" ? "OFAC SDN match" : "counterparty not a registered CASP"}</div>}
+      {stage === "CLEARED" && <a className="ok" href={`/record/${result.jobId}`}>CLEARED - open filable record</a>}
+      {stage === "DO_NOT_TRANSMIT" && <div className="block">DO NOT TRANSMIT - {result.screenVerdict === "HIT" ? "OFAC SDN match" : "counterparty not a registered CASP"}</div>}
       {stage === "INCOMPLETE" && <div className="warn">INCOMPLETE: {result.validation?.violations?.map((v: any) => v.constraint).join(", ")}</div>}
     </main>
   );
@@ -1198,7 +1198,7 @@ export default function Cockpit() {
 ```
 
 #### File: apps/web/app/proof/[jobId]/page.tsx
-[VERIFIED] — Source: Next.js server component reading chain
+[VERIFIED] - Source: Next.js server component reading chain
 ```typescript
 // File: apps/web/app/proof/[jobId]/page.tsx
 import { getAttestation } from "../../../lib/chain";
@@ -1211,7 +1211,7 @@ export default async function Proof({ params }: { params: Promise<{ jobId: strin
   const verdict = att.verifyVerdict === 0 && att.screenVerdict === 0 ? "CLEARED" : "BLOCKED";
   return (
     <main className="proof">
-      <h1>On-chain attestation — {verdict}</h1>
+      <h1>On-chain attestation - {verdict}</h1>
       <table>
         <tbody>
           <tr><td>commitmentHash (bytes32, a hash)</td><td>{att.commitmentHash}</td></tr>
@@ -1232,7 +1232,7 @@ export default async function Proof({ params }: { params: Promise<{ jobId: strin
 ```
 
 #### File: apps/web/lib/memo.tsx
-[VERIFIED] — Source: @react-pdf/renderer document (C9 record + memo)
+[VERIFIED] - Source: @react-pdf/renderer document (C9 record + memo)
 ```typescript
 // File: apps/web/lib/memo.tsx
 import { Document, Page, Text, View } from "@react-pdf/renderer";
@@ -1244,7 +1244,7 @@ export function MemoDoc({ ivms, applicability, jobId, commitment, txUrl, cleared
     <Document>
       <Page>
         <View>
-          <Text>TRAVEL RULE TRANSMITTAL RECORD — {cleared ? "CLEARED" : "DO NOT TRANSMIT"}</Text>
+          <Text>TRAVEL RULE TRANSMITTAL RECORD - {cleared ? "CLEARED" : "DO NOT TRANSMIT"}</Text>
           <Text>Pursuant to {applicability.citation}.</Text>
           <Text>Originator: {orig?.primaryIdentifier} {orig?.secondaryIdentifier ?? ""}</Text>
           <Text>Beneficiary VASP LEI: {ivms.BeneficiaryVASP.beneficiaryVASP.legalPerson.nationalIdentification?.nationalIdentifier}</Text>
@@ -1287,7 +1287,7 @@ UI/chain [VERIFIED]; `lib/cre.ts` [UNVERIFIED] (the real CRE runner is wired at 
 ```
 
 #### File: scripts/verify-claims.ts
-[VERIFIED] — recompute verifier (franchise skeleton); refuses read-back, recomputes from committed source
+[VERIFIED] - recompute verifier (franchise skeleton); refuses read-back, recomputes from committed source
 ```typescript
 // File: scripts/verify-claims.ts
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -1316,7 +1316,7 @@ main();
 ```
 
 #### File: scripts/seed-demo.ts
-[VERIFIED] — seeds a real CLEARED + a real BLOCKED run (earned state, not fabricated)
+[VERIFIED] - seeds a real CLEARED + a real BLOCKED run (earned state, not fabricated)
 ```typescript
 // File: scripts/seed-demo.ts
 import { writeFileSync } from "node:fs";
@@ -1338,7 +1338,7 @@ const base = (beneAddr: string): TransferIntent => ({
 async function main() {
   const clean = base("0xB0B0000000000000000000000000000000000B0B");
   const blocked = base(process.env.DEMO_HIT_ADDRESS ?? "3Lpoy53K625zVeE47ZasiG5jGkAxJ27kh1");
-  // verifyVerdict is 0 (PASS) for both seeds — the BLOCK on the Garantex case comes from the
+  // verifyVerdict is 0 (PASS) for both seeds - the BLOCK on the Garantex case comes from the
   // SCREEN verdict (HIT), which is a separate on-chain verdict and is NOT part of the commitment.
   const claims = [clean, blocked].map((intent) => {
     const ivms = buildIvms(intent);
@@ -1372,21 +1372,21 @@ submission/
 ├── links.md          # live URL, repo, docs
 └── sponsor-tracks.md # LegalTech/RegTech + CRE bounty evidence
 ```
-Generated by: build (proof route) + deploy (explorer verification) + package (bundle).
+Evidence sources: the proof route, on-chain explorer verification, and the submission bundle.
 
 ## Section N+3: Multi-Track Architecture
-- **LegalTech & RegTech (primary):** C1 resolver + citations + C2 IVMS101 + C9 memo — the filable record is the track evidence.
-- **Chainlink CRE bounty:** C3 (Confidential HTTP) + C4 (DON consensus) + C7 (Base Sepolia attestation) — the dual primitive is the bounty evidence (both load-bearing, delete-smoke proven).
+- **LegalTech & RegTech (primary):** C1 resolver + citations + C2 IVMS101 + C9 memo - the filable record is the track evidence.
+- **Chainlink CRE bounty:** C3 (Confidential HTTP) + C4 (DON consensus) + C7 (Base Sepolia attestation) - the dual primitive is the bounty evidence (both load-bearing, delete-smoke proven).
 Two architecturally-distinct integration points; verification = the filable PDF (track) + the BaseScan attestation tx (bounty).
 
 ## Section N+4: Safety Architecture
-- **Layer 1 — Input validation:** C1 rejects unknown CASP status (`NEEDS_HUMAN_REVIEW`); C2 blocks on C1/C6 violations; the run API returns 422 on INCOMPLETE. Prevents a malformed transfer from being attested.
-- **Layer 2 — Fail-closed verdicts:** verify defaults to DEGRADED, screen `.withDefault("DEGRADED")`; neither ever defaults to a pass. Prevents a silent false CLEAR.
-- **Layer 3 — Forwarder guard + report validation:** C7 reverts on non-forwarder callers and malformed reports. Prevents a forged attestation.
-- **Layer 4 — Graceful degradation:** RPC fallback (C10), backup demo clip (DT-10), simulate path if CRE beta-gated (DT-5). Prevents a dead demo.
+- **Layer 1 - Input validation:** C1 rejects unknown CASP status (`NEEDS_HUMAN_REVIEW`); C2 blocks on C1/C6 violations; the run API returns 422 on INCOMPLETE. Prevents a malformed transfer from being attested.
+- **Layer 2 - Fail-closed verdicts:** verify defaults to DEGRADED, screen `.withDefault("DEGRADED")`; neither ever defaults to a pass. Prevents a silent false CLEAR.
+- **Layer 3 - Forwarder guard + report validation:** C7 reverts on non-forwarder callers and malformed reports. Prevents a forged attestation.
+- **Layer 4 - Graceful degradation:** RPC fallback (C10), backup demo clip (DT-10), simulate path if CRE beta-gated (DT-5). Prevents a dead demo.
 Each layer tested (Appendix Q); ≥2 independent layers.
 
-## Section N+6: Configuration Reference — ## Credentials Needed
+## Section N+6: Configuration Reference - ## Credentials Needed
 | Variable | Used By | Where to Obtain | Required Before |
 |----------|---------|-----------------|-----------------|
 | BASE_SEPOLIA_RPC_URL | C7 deploy, C10 | Alchemy/Infura/public | build (deploy) |
@@ -1401,7 +1401,7 @@ Each layer tested (Appendix Q); ≥2 independent layers.
 | CRE_WORKFLOW_TARGET | C3/C4 | ethereum-testnet-sepolia-base-1 | wire |
 
 ## Section N+7: Testing Strategy
-- Unit: `packages/core` (vitest) — resolver truth table, IVMS C1/C6, commitment determinism; `packages/ofac` — parse fixture, base58 case, aka indexing.
+- Unit: `packages/core` (vitest) - resolver truth table, IVMS C1/C6, commitment determinism; `packages/ofac` - parse fixture, base58 case, aka indexing.
 - Integration: C3→C6 (verify + timeout→DEGRADED), C4→C5 (CLEAR + Garantex HIT), C7 report decode.
 - E2E: cockpit CLEARED + DO-NOT-TRANSMIT; proof page cold-open; RPC fallback.
 - Contract: `forge test` (3 tests in the suite above).
@@ -1413,7 +1413,7 @@ Sequential spine: C1 → C2 → C7 → (C3 ‖ C4) → UI. Parallel groups: A = 
 ## Section N+9: Deployment Sequence
 | # | Service | Startup cmd | Health check | depends-on | Env |
 |---|---------|-------------|--------------|-----------|-----|
-| 1 | VASP registry (C6) | `pnpm --filter vasp-registry start` | `curl -X POST :8787/verify` → 401 w/o key | — | VASP_VERIFY_KEY |
+| 1 | VASP registry (C6) | `pnpm --filter vasp-registry start` | `curl -X POST :8787/verify` → 401 w/o key | - | VASP_VERIFY_KEY |
 | 2 | Contract (C7) | `forge script Deploy --broadcast --rpc-url base_sepolia` | BaseScan shows address | funded key, forwarder | DEPLOYER_PRIVATE_KEY, KEYSTONE_FORWARDER_ADDR |
 | 3 | CRE workflows (C3/C4) | `cre workflow simulate <wf> --broadcast --target base-sepolia` | report tx on BaseScan | C6 up, C7 deployed | CRE_WORKFLOW_TARGET, VASP_VERIFY_URL |
 | 4 | Seed (scripts) | `pnpm seed` then run CRE | 2 attestations on-chain | C3/C4, C7 | DEMO_HIT_ADDRESS |
@@ -1436,7 +1436,7 @@ Sequential spine: C1 → C2 → C7 → (C3 ‖ C4) → UI. Parallel groups: A = 
 | C4 (screen wf) | OFAC SDN feed | HTTPS GET (follow 302→S3) | none | `curl -sIL $OFAC_SDN_URL` → 200 | P0 |
 | C3 (verify wf) | VASP registry (C6) | HTTPS POST (in-enclave) | VASP_VERIFY_KEY (Vault DON) | `POST /verify` 401 w/o key | P0 |
 | C3/C4 | Base Sepolia (via KeystoneForwarder) | CRE writeReport | DEPLOYER (deploy only) | report tx on BaseScan | P0 |
-| C7 | KeystoneForwarder | Solidity onReport | — | forwarder addr set | P0 |
+| C7 | KeystoneForwarder | Solidity onReport | - | forwarder addr set | P0 |
 | C10/C9 | Base Sepolia RPC | JSON-RPC eth_call | none | `cast chain-id` → 84532 | P1 |
 | cre CLI | CRE runtime | `cre login` | CRE account | `cre whoami` | P1 |
 
@@ -1450,11 +1450,11 @@ Threat matrix (build fills `SECURITY.md` to this shape):
 | Secret leak | Vault DON secrets, never in code | packages/cre/src/verify.workflow.ts |
 | Wrong legal authority | citation lint (banned patterns) | packages/core/src/citations.ts |
 
-**## Not defended against** (honest, build keeps): two-VASP handshake integrity (out of scope — TRISA prod path); managed-DON multi-sig assurance if run in simulator; a compromised VASP registry endpoint (mock); mainnet-grade key management (testnet only).
+**## Not defended against** (honest, build keeps): two-VASP handshake integrity (out of scope - TRISA prod path); managed-DON multi-sig assurance if run in simulator; a compromised VASP registry endpoint (mock); mainnet-grade key management (testnet only).
 
 ---
 
-## Section 12: Remaining workspace files (complete the tree — METRIC 1 file coverage)
+## Section 12: Remaining workspace files (complete the tree - METRIC 1 file coverage)
 
 #### File: pnpm-workspace.yaml
 [VERIFIED]
@@ -1466,7 +1466,7 @@ packages:
 ```
 
 #### File: .env.example
-[VERIFIED] — credentials manifest (also emitted to working_dir at Phase 4); example values only
+[VERIFIED] - credentials manifest (also emitted to working_dir at Phase 4); example values only
 ```bash
 # File: .env.example
 BASE_SEPOLIA_RPC_URL=https://sepolia.base.org
@@ -1507,7 +1507,7 @@ CRE_WORKFLOW_TARGET=ethereum-testnet-sepolia-base-1
 ```
 
 #### File: packages/cre/config.json
-[VERIFIED] — Source: cre workflow config shape + Base Sepolia selector
+[VERIFIED] - Source: cre workflow config shape + Base Sepolia selector
 ```json
 // File: packages/cre/config.json
 {
@@ -1554,7 +1554,7 @@ export default config;
 ```
 
 #### File: apps/web/app/actions.ts
-[VERIFIED] — server action wrapping the run API for progressive enhancement
+[VERIFIED] - server action wrapping the run API for progressive enhancement
 ```typescript
 // File: apps/web/app/actions.ts
 "use server";
@@ -1567,7 +1567,7 @@ export async function classifyAction(intent: TransferIntent) {
 ```
 
 #### File: apps/web/app/page.tsx
-[VERIFIED] — landing (/) with the money-shot sample attestation
+[VERIFIED] - landing (/) with the money-shot sample attestation
 ```typescript
 // File: apps/web/app/page.tsx
 import { getAttestation } from "../lib/chain";
@@ -1601,7 +1601,7 @@ export function jobIdForSeed(beneAddr: string): `0x${string}` { return jobIdFor(
 ```
 
 #### File: apps/web/app/record/[jobId]/page.tsx
-[VERIFIED] — the filable record view (HTML; PDF via lib/memo.tsx)
+[VERIFIED] - the filable record view (HTML; PDF via lib/memo.tsx)
 ```typescript
 // File: apps/web/app/record/[jobId]/page.tsx
 import { getRun } from "../../../lib/runStore";
@@ -1616,14 +1616,14 @@ export default async function Record({ params }: { params: Promise<{ jobId: stri
   const cleared = run.verifyVerdict === 0 && run.screenVerdict === "CLEAR";
   return (
     <main className="record">
-      <h1>Travel Rule Transmittal Record — {cleared ? "CLEARED" : "DO NOT TRANSMIT"}</h1>
+      <h1>Travel Rule Transmittal Record - {cleared ? "CLEARED" : "DO NOT TRANSMIT"}</h1>
       <p>Pursuant to {run.applicability.citation}.</p>
       <h2>IVMS 101.2023 record</h2>
       <pre>{JSON.stringify(run.ivms, null, 2)}</pre>
       <footer className="verifiable">
         jobId {jobId} · commitment {run.commitmentHash} ·{" "}
         <a href={`https://sepolia.basescan.org/tx/${run.txHash ?? ""}`}>BaseScan</a> ·{" "}
-        <a href={`/proof/${jobId}`}>the ledger holds no personal data — verify</a>
+        <a href={`/proof/${jobId}`}>the ledger holds no personal data - verify</a>
         {att ? " · attested" : " · pending attestation"}
       </footer>
     </main>
@@ -1632,11 +1632,11 @@ export default async function Record({ params }: { params: Promise<{ jobId: stri
 ```
 
 #### File: scripts/run-cre.sh
-[UNVERIFIED] — Source: wire wires this to `cre workflow simulate`; prints JSON verdicts from the REAL run
+[UNVERIFIED] - Source: wire wires this to `cre workflow simulate`; prints JSON verdicts from the REAL run
 ```bash
 # File: scripts/run-cre.sh
 #!/usr/bin/env bash
-# WARNING: UNVERIFIED — this is a FAIL-LOUD stub. At wire (PLAN P3.4b) replace the exit-1 block
+# WARNING: UNVERIFIED - this is a FAIL-LOUD stub. At wire (PLAN P3.4b) replace the exit-1 block
 # with the real `cre workflow simulate --broadcast` invocation that triggers verify + screen and
 # parses the REAL verdicts + tx hashes. It MUST emit verdicts from the real run; NEVER a constant.
 # Deliberately does NOT emit a passing verdict: a constant PASS here would fabricate every demo
@@ -1657,7 +1657,7 @@ exit 1
 ```
 
 #### File: packages/ofac/test/fixtures/sdn-sample.xml
-[VERIFIED] — Source: OFAC SDN.XML schema (minimal fixture for parse tests)
+[VERIFIED] - Source: OFAC SDN.XML schema (minimal fixture for parse tests)
 ```xml
 <!-- File: packages/ofac/test/fixtures/sdn-sample.xml -->
 <sdnList xmlns="https://www.treasury.gov/ofac/downloads/sdn.xsd">
@@ -1679,7 +1679,7 @@ exit 1
 ```
 
 #### File: packages/core/test/resolver.test.ts
-[VERIFIED] — vitest; truth-table coverage
+[VERIFIED] - vitest; truth-table coverage
 ```typescript
 // File: packages/core/test/resolver.test.ts
 import { describe, it, expect } from "vitest";
@@ -1713,7 +1713,7 @@ describe("resolver truth table", () => {
 ```
 
 #### File: packages/core/test/ivms.test.ts
-[VERIFIED] — vitest; C1/C6 constraints
+[VERIFIED] - vitest; C1/C6 constraints
 ```typescript
 // File: packages/core/test/ivms.test.ts
 import { describe, it, expect } from "vitest";
@@ -1739,7 +1739,7 @@ describe("IVMS validate", () => {
 ```
 
 #### File: packages/core/test/commitment.test.ts
-[VERIFIED] — vitest; commitment determinism + round-trip
+[VERIFIED] - vitest; commitment determinism + round-trip
 ```typescript
 // File: packages/core/test/commitment.test.ts
 import { describe, it, expect } from "vitest";
@@ -1762,7 +1762,7 @@ describe("commitment", () => {
 ```
 
 #### File: packages/ofac/test/sdn.test.ts
-[VERIFIED] — vitest; parse the fixture + screen
+[VERIFIED] - vitest; parse the fixture + screen
 ```typescript
 // File: packages/ofac/test/sdn.test.ts
 import { describe, it, expect } from "vitest";
@@ -1792,7 +1792,7 @@ describe("SDN parse + screen", () => {
 ```
 
 ### Design Rationale (one-way dependency flow)
-`packages/core` imports nothing outward (no viem-RPC, no SDK, no fetch — only viem's pure `keccak256`). `packages/ofac`, `packages/cre`, `apps/web`, `contracts` depend inward on `core`. Each external coupling is one directory: OFAC → `packages/ofac`, CRE → `packages/cre`, chain-read → `apps/web/lib/chain.ts`. A judge finds each integration in one place; the build reproduces from this tree.
+`packages/core` imports nothing outward (no viem-RPC, no SDK, no fetch - only viem's pure `keccak256`). `packages/ofac`, `packages/cre`, `apps/web`, `contracts` depend inward on `core`. Each external coupling is one directory: OFAC → `packages/ofac`, CRE → `packages/cre`, chain-read → `apps/web/lib/chain.ts`. A judge finds each integration in one place; the build reproduces from this tree.
 
 ## Section N+5: Agent Architecture
-**Not applicable.** TravelProof has no autonomous agent loop (deliberately — see INVARIANTS: the deterministic resolver + human-signs discipline is the point; the RYO-CHAN agent bounty is explicitly NOT pursued). `project_type = full-stack` (contracts + CRE workflows + frontend), not `agent`.
+**Not applicable.** TravelProof has no autonomous agent loop (deliberately - see INVARIANTS: the deterministic resolver + human-signs discipline is the point; the RYO-CHAN agent bounty is explicitly NOT pursued). `project_type = full-stack` (contracts + CRE workflows + frontend), not `agent`.

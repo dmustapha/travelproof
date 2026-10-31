@@ -1,4 +1,4 @@
-// The Seal — TravelProof's signature object. A notarial rosette whose four gate arcs inscribe as the
+// The Seal - TravelProof's signature object. A notarial rosette whose four gate arcs inscribe as the
 // real stage advances. State-driven (props), never decorative: idle/active/pass/fail per gate.
 export type GateState = "idle" | "active" | "pass" | "fail" | "open";
 export const ATTESTED_RING = "TRAVELPROOF · DON-ATTESTED · BASE SEPOLIA 84532 · ";

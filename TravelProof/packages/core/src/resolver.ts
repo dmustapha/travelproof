@@ -49,6 +49,20 @@ export function classify(intent: TransferIntent): Applicability {
   }
 
   // originatorIsCasp == true from here.
+  // Guard: a non-finite or negative fiat value cannot be classified against the
+  // FATF de-minimis without silently failing open to the reduced-data regime
+  // (NaN >= 1000 is false). Escalate to human review rather than guess.
+  if (!Number.isFinite(fiatValueUsd) || fiatValueUsd < 0) {
+    return {
+      applicable: "NEEDS_HUMAN_REVIEW",
+      regime: "NONE",
+      requiredOriginatorFields: [],
+      requiredBeneficiaryFields: [],
+      citation: "",
+      rationale: "Transfer value is missing, negative, or non-finite; de-minimis applicability cannot be determined deterministically.",
+    };
+  }
+
   const overThreshold = fiatValueUsd >= FATF_DEMINIMIS_USD;
 
   // Rows 1-2: CASP -> CASP.

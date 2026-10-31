@@ -25,7 +25,7 @@ describe("SDN parse + screen", () => {
 });
 
 // A-G4 SURVIVOR #5 + Phase-2 Gate: the parser MUST fail closed on an empty / namespace-broken
-// parse — never return an empty index (which would screen every address as a false CLEAR).
+// parse - never return an empty index (which would screen every address as a false CLEAR).
 describe("SDN parse fails closed (never a false CLEAR)", () => {
   it("throws SCREEN_DEGRADED when the root <sdnList> is missing (namespace/parse failure)", () => {
     // A body whose root key is not `sdnList` (e.g. a namespace-prefixed root that removeNSPrefix

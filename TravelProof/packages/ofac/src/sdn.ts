@@ -31,11 +31,11 @@ export function parseSdn(xml: string): SdnIndex {
   const parser = new XMLParser({ ignoreAttributes: false, removeNSPrefix: true, parseTagValue: false, isArray: (name) => ["sdnEntry", "id", "aka"].includes(name) });
   const doc = parser.parse(xml);
   const list = doc.sdnList;
-  if (!list) throw new Error("SCREEN_DEGRADED: SDN.XML root <sdnList> not found (parse/namespace failure) — refusing to screen against an empty index");
+  if (!list) throw new Error("SCREEN_DEGRADED: SDN.XML root <sdnList> not found (parse/namespace failure) - refusing to screen against an empty index");
   const pub = list.publshInformation ?? {}; // NOTE: OFAC's element is misspelled "publshInformation"
   const entries: any[] = list.sdnEntry ?? [];
   // Fail-closed: a real feed has thousands of entries. An empty parse must NOT yield a CLEAR screen.
-  if (entries.length === 0) throw new Error("SCREEN_DEGRADED: SDN.XML parsed to 0 entries — refusing a false CLEAR");
+  if (entries.length === 0) throw new Error("SCREEN_DEGRADED: SDN.XML parsed to 0 entries - refusing a false CLEAR");
 
   const addresses = new Set<string>();
   const addressesLower = new Set<string>();

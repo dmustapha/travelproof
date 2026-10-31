@@ -1,6 +1,6 @@
 // File: apps/web/lib/chain.test.ts
 // Lightweight, network-free tests for the chain/ledger decode contracts.
-// Runs under tsx (node:test) — no vitest dependency required:
+// Runs under tsx (node:test) - no vitest dependency required:
 //   corepack pnpm exec tsx --test apps/web/lib/chain.test.ts
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -58,7 +58,7 @@ function eventTopic0(): `0x${string}` {
 }
 
 test("ledger row maps verdict 0 to CLEARED semantics", () => {
-  // The page renders verdict===0 as CLEARED, else DO NOT TRANSMIT — assert the boundary here.
+  // The page renders verdict===0 as CLEARED, else DO NOT TRANSMIT - assert the boundary here.
   const label = (v: number) => (v === 0 ? "CLEARED" : "DO NOT TRANSMIT");
   assert.equal(label(0), "CLEARED");
   assert.equal(label(1), "DO NOT TRANSMIT");

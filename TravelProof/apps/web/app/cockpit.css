@@ -1,4 +1,4 @@
-/* Cockpit — workstation on a lit desk: case rail | intake slip (paper) | verdict plate (dark ink, corner-lit) */
+/* Cockpit - workstation on a lit desk: case rail | intake slip (paper) | verdict plate (dark ink, corner-lit) */
 .ck { --ink-deep: oklch(19% .05 262); position: relative; isolation: isolate; padding: 40px max(28px, calc((100vw - 1380px)/2)) 90px !important; max-width: none !important; min-height: calc(100dvh - 54px);
   background: linear-gradient(180deg, oklch(93% .02 85), oklch(88% .03 80)); }
 .ck::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;

@@ -42,7 +42,7 @@ export function startServer(port = 8787) {
               source = "SYNTHETIC_FALLBACK";
             }
           }
-          // Synthetic originator attribute-match (mTLS gRPC handshake out of scope — DISCLOSED):
+          // Synthetic originator attribute-match (mTLS gRPC handshake out of scope - DISCLOSED):
           // a present (non-empty) hash counts as a match for a registered VASP.
           const originatorMatch = registered && typeof originatorHash === "string" && originatorHash.length > 0;
           res

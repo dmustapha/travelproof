@@ -2,7 +2,7 @@
 import { keccak256, toHex, stringToBytes } from "viem";
 import type { IvmsMessage } from "./types";
 
-// The commitment anchors the VERIFY-side payload the enclave processed — the exact fields the
+// The commitment anchors the VERIFY-side payload the enclave processed - the exact fields the
 // CRE verify workflow has at report time (NOT the screen verdict, which is a separate parallel
 // DON verdict, and NOT the originator name, which the workflow sees only as a hash). ONE canonical
 // serialization, used identically by verify.workflow.ts and verify-claims.ts (round-trip).

@@ -6,8 +6,8 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 // so the recompute uses the SAME canonical serialization the verify workflow wrote on-chain.
 //
 // PHASE-0 NOTE (DEV-001): @travelproof/core/commitment and ../apps/web/lib/chain are authored in
-// later phases (C2 / C10). To keep `verify:claims` runnable on the empty ledger at C0 — the
-// franchise-skeleton honesty gate — the recompute dependencies are imported dynamically INSIDE the
+// later phases (C2 / C10). To keep `verify:claims` runnable on the empty ledger at C0 - the
+// franchise-skeleton honesty gate - the recompute dependencies are imported dynamically INSIDE the
 // per-claim loop. On the empty ledger the loop never runs, so no missing module is touched; once
 // core/chain land the real recompute path executes unchanged. This is the exact ARCHITECTURE §11
 // logic, deferred-imported.

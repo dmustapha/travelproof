@@ -1,5 +1,5 @@
 // File: packages/cre/src/screen.workflow.ts
-// WARNING: UNVERIFIED PATTERN — validate in `cre workflow simulate` at wire.
+// WARNING: UNVERIFIED PATTERN - validate in `cre workflow simulate` at wire.
 import { EVMClient, HTTPClient, handler, consensusIdenticalAggregation } from "@chainlink/cre-sdk";
 import { encodeAbiParameters, parseAbiParameters } from "viem";
 import { fetchAndIndexSdn, assertDemoHitPresent } from "@travelproof/ofac/sdn";

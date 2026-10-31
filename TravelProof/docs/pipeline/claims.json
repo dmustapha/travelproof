@@ -16,7 +16,7 @@
     },
     {
       "id": "C2",
-      "claim": "No personal data can be written on-chain — the attestation storage struct holds only a bytes32 commitmentHash (no string fields), so a PII write is structurally unrepresentable.",
+      "claim": "No personal data can be written on-chain - the attestation storage struct holds only a bytes32 commitmentHash (no string fields), so a PII write is structurally unrepresentable.",
       "value": "bytes32 commitmentHash",
       "evidence": "TravelProof/contracts/src/TravelRuleAttestation.sol",
       "regenerate": "grep -cE '^[[:space:]]*string' TravelProof/contracts/src/TravelRuleAttestation.sol  # => 0",
@@ -36,7 +36,7 @@
     },
     {
       "id": "C4",
-      "claim": "The OFAC SDN screen hits the live Treasury feed every run and fails closed — it is never a cached CLEAR.",
+      "claim": "The OFAC SDN screen hits the live Treasury feed every run and fails closed - it is never a cached CLEAR.",
       "value": "302",
       "evidence": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML",
       "regenerate": "curl -s -o /dev/null -w '%{http_code}' https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML  # => 302 (Treasury 302->CDN; never a stub)",
@@ -46,7 +46,7 @@
     },
     {
       "id": "C5",
-      "claim": "The applicability resolver is deterministic with zero AI on the decision path (INVARIANT 3), and the IVMS 101.2023 commitment round-trips byte-for-byte — core suite 12/12 green.",
+      "claim": "The applicability resolver is deterministic with zero AI on the decision path (INVARIANT 3), and the IVMS 101.2023 commitment round-trips byte-for-byte - core suite 12/12 green.",
       "value": "12/12",
       "evidence": "BUILD-REPORT.md",
       "regenerate": "cd TravelProof && corepack pnpm --filter @travelproof/core test 2>&1 | grep -oE 'Tests +[0-9]+ passed' | tail -1 | tr -d '[:space:]'  # => Tests12passed",

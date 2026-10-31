@@ -50,9 +50,9 @@
       "mono": "\"IBM Plex Mono\", ui-monospace, Menlo, monospace"
     },
     "roles": {
-      "serif": "voice — headings, document body, determinations, § glyph",
-      "sans": "UI — nav, buttons, labels, helper text",
-      "mono": "data — ring text, gate labels, field keys, hashes, eyebrows"
+      "serif": "voice - headings, document body, determinations, § glyph",
+      "sans": "UI - nav, buttons, labels, helper text",
+      "mono": "data - ring text, gate labels, field keys, hashes, eyebrows"
     },
     "scale": {
       "body": "17px/1.6 serif",
@@ -65,7 +65,7 @@
     }
   },
   "elevation": {
-    "sunken": "carved into surface (inset shadow, darker, recessed) — inputs, enclave, trays",
+    "sunken": "carved into surface (inset shadow, darker, recessed) - inputs, enclave, trays",
     "flat": "printed on surface (paper tone + hairline, no shadow)",
     "raised": "card on desk (e2: 2-layer shadow + lit top edge)",
     "lifted": "slip/sheet above cards (e3: long soft + contact shadow)",

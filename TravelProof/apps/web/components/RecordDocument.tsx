@@ -14,7 +14,7 @@ function Field({ path, value, mono, warn }: { path: string; value?: string; mono
   return (
     <div className="fld">
       <dt><code>{path}</code></dt>
-      <dd className={`${mono ? "mono" : ""} ${warn ? "fld-warn" : ""}`}>{value ?? "—"}</dd>
+      <dd className={`${mono ? "mono" : ""} ${warn ? "fld-warn" : ""}`}>{value ?? "-"}</dd>
     </div>
   );
 }
@@ -78,8 +78,8 @@ export function RecordDocument({ run, specimen = false, attested = false }: { ru
             <div>
               <h3>Transfer</h3>
               <dl className="ivms-dl">
-                <Field path="transfer, outside IVMS: amount · asset" value={run.transfer ? `${run.transfer.amount} ${run.transfer.assetSymbol}` : "—"} />
-                <Field path="fiat value (USD)" value={run.transfer ? run.transfer.fiatValueUsd.toLocaleString("en-US") : "—"} />
+                <Field path="transfer, outside IVMS: amount · asset" value={run.transfer ? `${run.transfer.amount} ${run.transfer.assetSymbol}` : "-"} />
+                <Field path="fiat value (USD)" value={run.transfer ? run.transfer.fiatValueUsd.toLocaleString("en-US") : "-"} />
               </dl>
             </div>
             <div>
@@ -130,7 +130,7 @@ export function RecordDocument({ run, specimen = false, attested = false }: { ru
             <Field path="network" value="Base Sepolia · chainId 84532" mono />
             <Field path="contract" value={CONTRACT} mono />
             <Field path="jobId · record key; verify with getAttestation(bytes32)" value={run.jobId} mono />
-            <Field path="transaction" value={run.txHash ?? (specimen ? "— (specimen: not attested)" : "pending")} mono />
+            <Field path="transaction" value={run.txHash ?? (specimen ? "- (specimen: not attested)" : "pending")} mono />
           </dl>
         </section>
 

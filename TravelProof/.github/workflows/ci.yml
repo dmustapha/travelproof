@@ -23,15 +23,15 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Typecheck
-        run: pnpm -r exec tsc --noEmit || echo "typecheck: no tsconfig yet (scaffold phase) — components add theirs as they land"
+        run: pnpm -r exec tsc --noEmit || echo "typecheck: no tsconfig yet (scaffold phase) - components add theirs as they land"
 
       - name: Franchise recompute gate
         run: pnpm verify:claims
 
-      # Offline/unit tier only — the default gate excludes *.integration.ts and *.live.ts.
+      # Offline/unit tier only - the default gate excludes *.integration.ts and *.live.ts.
       # Test scripts arrive in later phases; placeholder until then.
       - name: Unit tests (offline tier)
-        run: pnpm -r test || echo "no tests yet (scaffold phase) — unit tests land with components"
+        run: pnpm -r test || echo "no tests yet (scaffold phase) - unit tests land with components"
 
   contracts:
     runs-on: ubuntu-latest
@@ -42,4 +42,4 @@ jobs:
       - uses: foundry-rs/foundry-toolchain@v1
       - name: Forge build + test
         working-directory: contracts
-        run: forge build && forge test || echo "no contracts yet (scaffold phase) — C7 lands later"
+        run: forge build && forge test || echo "no contracts yet (scaffold phase) - C7 lands later"

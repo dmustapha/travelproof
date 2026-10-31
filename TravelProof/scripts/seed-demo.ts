@@ -18,7 +18,7 @@ const base = (beneAddr: string): TransferIntent => ({
 async function main() {
   const clean = base("0xB0B0000000000000000000000000000000000B0B");
   const blocked = base(process.env.DEMO_HIT_ADDRESS ?? "3Lpoy53K625zVeE47ZasiG5jGkAxJ27kh1");
-  // verifyVerdict is 0 (PASS) for both seeds — the BLOCK on the Garantex case comes from the
+  // verifyVerdict is 0 (PASS) for both seeds - the BLOCK on the Garantex case comes from the
   // SCREEN verdict (HIT), which is a separate on-chain verdict and is NOT part of the commitment.
   const claims = [clean, blocked].map((intent) => {
     const ivms = buildIvms(intent);

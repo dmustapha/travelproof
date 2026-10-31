@@ -1,11 +1,11 @@
-# TravelProof — Design System (as built)
+# TravelProof - Design System (as built)
 
 Formalized from the signed-off implementation (Dami, 2026-10-31 "looks good"). This documents
 **reality**; it prescribes no changes. Source of truth for color is the `oklch()` set in
 `apps/web/app/globals.css`; hex values below are baked sRGB equivalents for standalone assets
 (SVG/PNG) that cannot reference the app's CSS variables.
 
-Register: **a notarised transmittal record on a lit legal-paper desk** — a light instrument,
+Register: **a notarised transmittal record on a lit legal-paper desk** - a light instrument,
 not a dark dapp. The world is constructed paper (ruled lines, margin rule, grain, warm lamp
 glow) with a living notarial seal.
 
@@ -42,30 +42,30 @@ blue + amber corner lamp pools, a 26px dot field and a 72px rule grid.
 ### Accent
 | Token | oklch | hex | use |
 |---|---|---|---|
-| `--cite` | `oklch(38% .11 258)` | `#18417c` | citation/seal blue — the one brand accent; seal, links, em, enclave border |
+| `--cite` | `oklch(38% .11 258)` | `#18417c` | citation/seal blue - the one brand accent; seal, links, em, enclave border |
 
 ### State colors
 | Token | oklch | hex | meaning |
 |---|---|---|---|
-| `--ok` | `oklch(40% .09 158)` | `#085634` | verdigris — verified / CLEARED |
+| `--ok` | `oklch(40% .09 158)` | `#085634` | verdigris - verified / CLEARED |
 | `--ok-bg` | `oklch(94% .035 158)` | `#d9f3e2` | ok badge ground |
-| `--stop` | `oklch(42% .15 25)` | `#8d1a1e` | oxblood — DO NOT TRANSMIT / fail |
+| `--stop` | `oklch(42% .15 25)` | `#8d1a1e` | oxblood - DO NOT TRANSMIT / fail |
 | `--stop-bg` | `oklch(94.5% .03 25)` | `#ffe6e3` | block ground |
-| `--warn` | `oklch(48% .11 75)` | `#815200` | amber — degraded / open gate |
+| `--warn` | `oklch(48% .11 75)` | `#815200` | amber - degraded / open gate |
 
 ---
 
 ## 2. Elevation scale (`apps/web/app/depth.css`)
 
 One system. Every surface gets a level and **looks** like it; adjacent levels must differ;
-depth follows meaning. Shadows are tight contact + soft warm ambient ( v2 recut — no large grey
+depth follows meaning. Shadows are tight contact + soft warm ambient ( v2 recut - no large grey
 offsets).
 
 | Level | Name | Shadow var | What it is |
 |---|---|---|---|
 | e-1 | **sunken** | `--sunk` / `--sunk-deep` | carved in: inner shadow, darker, recessed. Inputs, enclave, "how it works" tray, glossary |
-| e0 | **ground** | — | the desk: texture only, no shadow |
-| e1 | **flat** | — | printed on the surface: paper tone + hairline, no shadow |
+| e0 | **ground** | - | the desk: texture only, no shadow |
+| e1 | **flat** | - | printed on the surface: paper tone + hairline, no shadow |
 | e2 | **raised** | `--e2` | card on desk: 2-layer shadow + lit top edge |
 | e3 | **lifted** | `--e3` | slip/sheet above cards: long soft + contact shadow |
 | e4 | **floating** | `--e4` | nav, CTAs, verdict plate: tall blur + ambient blue glow |
@@ -86,13 +86,13 @@ Depth-follows-meaning examples:
 
 ## 3. Typography
 
-Three families, three jobs — never cross roles.
+Three families, three jobs - never cross roles.
 
 | Family | Stack | Role |
 |---|---|---|
-| **Source Serif 4** | `"Source Serif 4", "Iowan Old Style", Georgia, serif` | **voice** — headings, document body, determinations, the § glyph |
-| **IBM Plex Sans** | `"IBM Plex Sans", system-ui, sans-serif` | **UI** — nav, buttons, labels, helper copy |
-| **IBM Plex Mono** | `"IBM Plex Mono", ui-monospace, Menlo, monospace` | **data** — ring text, gate labels, field keys, hashes, eyebrows |
+| **Source Serif 4** | `"Source Serif 4", "Iowan Old Style", Georgia, serif` | **voice** - headings, document body, determinations, the § glyph |
+| **IBM Plex Sans** | `"IBM Plex Sans", system-ui, sans-serif` | **UI** - nav, buttons, labels, helper copy |
+| **IBM Plex Mono** | `"IBM Plex Mono", ui-monospace, Menlo, monospace` | **data** - ring text, gate labels, field keys, hashes, eyebrows |
 
 Scale (key steps): body 17px/1.6 serif · lede 19px · eyebrow-mono 11.5px/.12em uppercase ·
 hero h1 `clamp(2.8rem,5.5vw,5.3rem)` −0.035em · cockpit h1 `clamp(2rem,3.6vw,3.1rem)` ·
@@ -103,7 +103,7 @@ PDF memo: serif + sans embedded, **Courier** for data (Plex Mono crashes fontkit
 
 ## 4. The Seal (`components/Seal.tsx`)
 
-TravelProof's signature object — a state-driven notarial rosette, never decorative.
+TravelProof's signature object - a state-driven notarial rosette, never decorative.
 
 **Geometry**: three guilloché rings (`G1`/`G2`/`G3`, counter-rotating), an outer edge ring
 (r95) + inner ring (r58), mono ring text, four 78°-wide gate arcs at r64 inscribed at the
@@ -113,17 +113,17 @@ cardinal quadrants, a core disc (r34), and the § center glyph (Source Serif 4).
 **Four gates** (`GATES`): `CLASSIFY · ENCLAVE · SCREEN · ATTEST`.
 
 **Gate states** (`GateState`): `idle | active | pass | fail | open`.
-- `active` — sweeping dash (run in progress)
-- `pass` — arc inscribes in, label engraves to full opacity
-- `fail` — arc inscribes in oxblood + flickers, label turns `--stop`
-- `open` — dotted arc (a step not yet taken, e.g. not-yet-attested)
-- `idle` — track only
+- `active` - sweeping dash (run in progress)
+- `pass` - arc inscribes in, label engraves to full opacity
+- `fail` - arc inscribes in oxblood + flickers, label turns `--stop`
+- `open` - dotted arc (a step not yet taken, e.g. not-yet-attested)
+- `idle` - track only
 
 **Void state** (`voided`): color flips to `--stop`, core gets a hatched fill, the § is struck
 through at low opacity, and a crack path is drawn across the mark. Ring text becomes
 `DO NOT TRANSMIT · …`.
 
-**Honesty mapping — `gatesFor(outcome)`**: maps a real run outcome onto the four gates so
+**Honesty mapping - `gatesFor(outcome)`**: maps a real run outcome onto the four gates so
 nothing is ever shown as passed that did not pass:
 - `RUNNING` → all four `active`
 - `CLEARED` → `pass pass pass` + ATTEST `pass` if attested else `open`
@@ -138,11 +138,11 @@ to hex so they stand alone.
 
 ---
 
-## 5. The TEAR — private ↔ public signature (`lib/tear.ts`)
+## 5. The TEAR - private ↔ public signature (`lib/tear.ts`)
 
 The identity of the product. Every surface that shows the boundary shows the **tear** between
 what stays private and what goes on-chain:
-- **PRIVATE** (identity — stays with the officer / in the enclave): the sunken dark panel.
+- **PRIVATE** (identity - stays with the officer / in the enclave): the sunken dark panel.
 - **PUBLIC CHAIN** (pass/fail + fingerprint + time): the lifted light panel.
 An irregular torn-paper edge with a fibre fringe, a glowing seam, and the badge
 **"No identity crosses"**. Recurs on: hero folder, the dark "pit" section, the `/record`
@@ -175,7 +175,7 @@ boundary (`.boundary` → `.enclave` | `.crossing` | `.onchain-view`), and the c
   carries OFAC blocking text.
 - **Attested means attested** (`lib/attest.ts`): "attested" is claimed only if the chain hash +
   both verdicts match the run.
-- **Fail closed.** Live `/api/run` returns 502 until CRE is wired — it never fabricates a pass.
+- **Fail closed.** Live `/api/run` returns 502 until CRE is wired - it never fabricates a pass.
 
 ---
 

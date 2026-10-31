@@ -1,5 +1,5 @@
 // File: apps/web/lib/cre.ts
-// WARNING: UNVERIFIED PATTERN — at wire this shells out to `cre workflow simulate --broadcast`
+// WARNING: UNVERIFIED PATTERN - at wire this shells out to `cre workflow simulate --broadcast`
 // or calls a thin runner service. The verdicts returned MUST come from the real run, never fabricated.
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";

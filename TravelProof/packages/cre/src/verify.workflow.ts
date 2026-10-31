@@ -1,10 +1,10 @@
 // File: packages/cre/src/verify.workflow.ts
-// CRE Confidential Workflows — beta access pending (production privacy path).
+// CRE Confidential Workflows - beta access pending (production privacy path).
 // This is the REAL in-enclave verify workflow (C3). It is NOT run in the live demo tonight: the
 // Confidential-HTTP path requires `cre login` + the Chainlink Confidential Workflows private beta
-// (requested at build minute 0). It is authored, not simulated or fabricated — the live verdict is
+// (requested at build minute 0). It is authored, not simulated or fabricated - the live verdict is
 // produced only by `cre workflow simulate` at the wire gate (same cre-login block as C4 / Risk-5).
-// WARNING: UNVERIFIED PATTERN — validate in `cre workflow simulate` at wire before relying on it.
+// WARNING: UNVERIFIED PATTERN - validate in `cre workflow simulate` at wire before relying on it.
 import { ConfidentialHTTPClient, EVMClient, handler, HTTPClient } from "@chainlink/cre-sdk";
 import { encodeAbiParameters, parseAbiParameters, keccak256, stringToBytes } from "viem";
 import type { CreConfig } from "./config";
@@ -32,7 +32,7 @@ export const initWorkflow = (config: CreConfig) => {
       })
       .result();
 
-    let verifyVerdict = 2; // DEGRADED by default — fail-closed
+    let verifyVerdict = 2; // DEGRADED by default - fail-closed
     if (resp.ok()) {
       const parsed = resp.json() as { registered: boolean; originatorMatch: boolean };
       verifyVerdict = parsed.registered && parsed.originatorMatch ? 0 : 1; // 0=PASS 1=FAIL

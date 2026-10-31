@@ -1,4 +1,4 @@
-# CLAIMS — TravelProof
+# CLAIMS - TravelProof
 
 Every headline claim below is **machine-recomputed** by `pnpm verify:claims`, which refuses
 read-back: it re-derives each commitment from committed source (`docs/pipeline/claims.json`) and
@@ -20,7 +20,7 @@ CRE run). Each row below is recomputed, never asserted._
 
 | # | Claim | jobId | Commitment (recomputed) | On-chain | Match | Evidence |
 |---|-------|-------|-------------------------|----------|-------|----------|
-| — | _(none yet — empty ledger at scaffold)_ | — | — | — | — | — |
+| - | _(none yet - empty ledger at scaffold)_ | - | - | - | - | - |
 
 ## Claim schema (per entry in `docs/pipeline/claims.json`)
 ```jsonc

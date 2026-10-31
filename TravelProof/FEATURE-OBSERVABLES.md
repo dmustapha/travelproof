@@ -1,4 +1,4 @@
-# FEATURE-OBSERVABLES — TravelProof
+# FEATURE-OBSERVABLES - TravelProof
 
 One observable per P0/P1 feature: a verifiable test the feature WORKS, not that it exists. (Seeds stress/livetest.)
 

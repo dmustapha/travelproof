@@ -35,7 +35,7 @@ export async function readLedger(fromBlock: bigint = DEPLOY_BLOCK): Promise<Ledg
     // Primary: single unbounded call (Alchemy supports it).
     logs = await publicClient.getLogs({ address, event: ATTESTATION_EVENT, fromBlock, toBlock: "latest" });
   } catch {
-    // Fallback RPC — walk the range in <=50k windows to respect its cap.
+    // Fallback RPC - walk the range in <=50k windows to respect its cap.
     logs = await getLogsRanged(fallbackClient, address, fromBlock);
   }
   return logs

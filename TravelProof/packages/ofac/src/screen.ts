@@ -10,7 +10,7 @@ export function screenAddress(idx: SdnIndex, addr: string): { hit: boolean; uid?
   if (isEvm(addr)) {
     return { hit: idx.addressesLower.has(addr.toLowerCase()) }; // EVM case-insensitive
   }
-  return { hit: idx.addresses.has(addr) }; // base58 case-sensitive — do NOT lowercase
+  return { hit: idx.addresses.has(addr) }; // base58 case-sensitive - do NOT lowercase
 }
 
 export function screenName(idx: SdnIndex, name: string, threshold = 85): { hit: boolean; uid?: string; score?: number } {

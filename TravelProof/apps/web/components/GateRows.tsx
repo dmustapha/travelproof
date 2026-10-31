@@ -10,7 +10,7 @@ export function GateRows({ gates, specimen = false }: { gates: GateState[]; spec
     <ol className="stage-rows">
       {ROWS.map(([n, d, ok], i) => {
         const st = gates[i];
-        const val = st === "fail" ? (i === 2 ? (specimen ? "listed · specimen" : "HIT · DO NOT TRANSMIT") : "FAILED") : st === "pass" ? (specimen && (i === 1 || i === 2) ? "not run" : ok) : st === "open" ? (specimen ? "not attested" : "awaiting attestation") : st === "active" ? "in progress" : "—";
+        const val = st === "fail" ? (i === 2 ? (specimen ? "listed · specimen" : "HIT · DO NOT TRANSMIT") : "FAILED") : st === "pass" ? (specimen && (i === 1 || i === 2) ? "not run" : ok) : st === "open" ? (specimen ? "not attested" : "awaiting attestation") : st === "active" ? "in progress" : "-";
         return (
           <li key={n} className={`gate-${st} ${specimen && st === "pass" && (i === 1 || i === 2) ? "gate-notrun" : ""}`} style={{ ["--i" as any]: i }}>
             <span className="dot" /><span className="rn">§{i + 1} {n}</span><span className="rd">{d}</span><span className="rv">{val}</span>

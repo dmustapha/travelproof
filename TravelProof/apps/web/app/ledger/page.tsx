@@ -1,7 +1,7 @@
 // File: apps/web/app/ledger/page.tsx
 import { readLedger } from "../../lib/ledger";
 
-// Live examiner log — read from chain at request time, never prerendered to a stale snapshot.
+// Live examiner log - read from chain at request time, never prerendered to a stale snapshot.
 export const dynamic = "force-dynamic";
 
 export default async function Ledger() {
@@ -11,7 +11,7 @@ export default async function Ledger() {
   return (
     <main className="ledger">
       <a className="back" href="/">← TravelProof</a>
-      <h1>Travel Rule Attestation Ledger — examiner evidence log</h1>
+      <h1>Travel Rule Attestation Ledger - examiner evidence log</h1>
       <p>Append-only, DON-attested record of every attested decision. Each row is independently verifiable on Base Sepolia; none holds personal data.</p>
       <table>
         <thead><tr><th>When (UTC)</th><th>Job</th><th>Verdict</th><th>Commitment</th><th>Proof</th></tr></thead>
@@ -26,7 +26,7 @@ export default async function Ledger() {
             </tr>
           ))}
           {unavailable && <tr><td colSpan={5}>The chain could not be read just now. Nothing is shown rather than a stale or partial list.</td></tr>}
-          {!unavailable && rows.length === 0 && <tr><td colSpan={5}>No attestations yet — run a transfer in the cockpit.</td></tr>}
+          {!unavailable && rows.length === 0 && <tr><td colSpan={5}>No attestations yet - run a transfer in the cockpit.</td></tr>}
         </tbody>
       </table>
       <footer>Contract <a href={`https://sepolia.basescan.org/address/${addr}`}>{addr}</a> · The chain holds hashes and enums only; retaining the underlying record remains the institution&apos;s obligation.</footer>

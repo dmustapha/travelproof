@@ -1,7 +1,7 @@
 // The enclave boundary: identity data stays inside (redacted), enums + hash only.
-const redact = (s?: string) => (s ? "█".repeat(Math.max(6, Math.min(14, s.length))) : "—");
+const redact = (s?: string) => (s ? "█".repeat(Math.max(6, Math.min(14, s.length))) : "-");
 function F({ path, value, redacted }: { path: string; value?: string; redacted?: boolean }) {
-  return <div className="fld"><dt><code>{path}</code></dt><dd className={redacted ? "redacted" : ""}>{value ?? "—"}</dd></div>;
+  return <div className="fld"><dt><code>{path}</code></dt><dd className={redacted ? "redacted" : ""}>{value ?? "-"}</dd></div>;
 }
 export function Boundary({ live = false, origName, origCust, beneName, verify, screen, commitment }: { live?: boolean; origName?: string; origCust?: string; beneName?: string; verify: number; screen: string; commitment: string }) {
   return (
