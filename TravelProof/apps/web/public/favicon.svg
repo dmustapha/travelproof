@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" role="img" aria-label="TravelProof">
+  <circle cx="100" cy="100" r="96" fill="#fefcf7"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#0e1928" stroke-width="5"/>
+  <line x1="100.0" y1="42.0" x2="100.0" y2="28.0" stroke="#18417c" stroke-width="7" stroke-linecap="round"/><line x1="158.0" y1="100.0" x2="172.0" y2="100.0" stroke="#18417c" stroke-width="7" stroke-linecap="round"/><line x1="100.0" y1="158.0" x2="100.0" y2="172.0" stroke="#18417c" stroke-width="7" stroke-linecap="round"/><line x1="42.0" y1="100.0" x2="28.0" y2="100.0" stroke="#18417c" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="100" cy="100" r="50" fill="none" stroke="#18417c" stroke-width="5"/>
+  <text x="100" y="128" text-anchor="middle" font-size="86" font-family="'Source Serif 4',Georgia,serif" font-weight="700" fill="#0e1928">§</text>
+</svg>

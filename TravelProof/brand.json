@@ -1,0 +1,88 @@
+{
+  "name": "TravelProof",
+  "tagline": "Prove who the counterparty is. Keep who they are off the ledger.",
+  "description": "FATF Travel Rule transmittal records with a DON-signed attestation on Base Sepolia. Verify the person, hide the person.",
+  "ringText": "TRAVELPROOF · TRAVEL RULE TRANSMITTAL RECORD · ",
+  "attestedRing": "TRAVELPROOF · DON-ATTESTED · BASE SEPOLIA 84532 · ",
+  "colors": {
+    "_note": "Source of truth is oklch in app/globals.css; hex below are baked sRGB equivalents for standalone assets (SVG/PNG).",
+    "desk": {
+      "deskTop": "#eee7d9",
+      "deskBottom": "#dfd3bf"
+    },
+    "paper": {
+      "paper": "#f8f3e7",
+      "sheet": "#fefcf7",
+      "well": "#eee9dd"
+    },
+    "ink": {
+      "ink": "#0e1928",
+      "inkDeep": "#07132a",
+      "enclaveTop": "#1d2d4c",
+      "enclaveBottom": "#101c34",
+      "enclaveFg": "#dbe6f2"
+    },
+    "accent": {
+      "cite": "#18417c"
+    },
+    "state": {
+      "ok": "#085634",
+      "okBg": "#d9f3e2",
+      "stop": "#8d1a1e",
+      "stopBg": "#ffe6e3",
+      "warn": "#815200"
+    },
+    "oklch": {
+      "paper": "oklch(96.4% 0.016 88)",
+      "sheet": "oklch(99% 0.007 88)",
+      "well": "oklch(93.6% 0.017 88)",
+      "ink": "oklch(21% 0.035 258)",
+      "cite": "oklch(38% 0.11 258)",
+      "ok": "oklch(40% 0.09 158)",
+      "stop": "oklch(42% 0.15 25)",
+      "warn": "oklch(48% 0.11 75)"
+    }
+  },
+  "type": {
+    "families": {
+      "serif": "\"Source Serif 4\", \"Iowan Old Style\", Georgia, serif",
+      "sans": "\"IBM Plex Sans\", system-ui, sans-serif",
+      "mono": "\"IBM Plex Mono\", ui-monospace, Menlo, monospace"
+    },
+    "roles": {
+      "serif": "voice — headings, document body, determinations, § glyph",
+      "sans": "UI — nav, buttons, labels, helper text",
+      "mono": "data — ring text, gate labels, field keys, hashes, eyebrows"
+    },
+    "scale": {
+      "body": "17px/1.6 serif",
+      "lede": "19px serif-voice",
+      "eyebrowMono": "11.5px mono, .12em, uppercase",
+      "h1Hero": "clamp(2.8rem, 5.5vw, 5.3rem)",
+      "h1Cockpit": "clamp(2rem, 3.6vw, 3.1rem)",
+      "h1Record": "clamp(1.9rem, 3.4vw, 2.9rem)",
+      "determination": "25px serif, .1em"
+    }
+  },
+  "elevation": {
+    "sunken": "carved into surface (inset shadow, darker, recessed) — inputs, enclave, trays",
+    "flat": "printed on surface (paper tone + hairline, no shadow)",
+    "raised": "card on desk (e2: 2-layer shadow + lit top edge)",
+    "lifted": "slip/sheet above cards (e3: long soft + contact shadow)",
+    "floating": "verdict plate, nav, CTAs (e4: tall blur + ambient colour glow)",
+    "protruding": "stamps, nodes, seals, ribbon tabs (e5: tight dark contact + highlight, overlaps parent edge)"
+  },
+  "logo": {
+    "mark": "/logo.svg",
+    "lockup": "/logo-lockup.svg",
+    "favicon": "/favicon.svg",
+    "faviconIco": "/favicon.ico",
+    "appleTouch": "/icon-180.png",
+    "og": "/og.png",
+    "source": "components/Seal.tsx (notarial guilloché rosette; 4 gate arcs CLASSIFY/ENCLAVE/SCREEN/ATTEST; § center glyph; void/crack state)"
+  },
+  "fonts": {
+    "googleFonts": "Source Serif 4, IBM Plex Sans, IBM Plex Mono",
+    "pdf": "serif + sans embedded; Courier for data (IBM Plex Mono crashes fontkit on hex)"
+  }
+}
