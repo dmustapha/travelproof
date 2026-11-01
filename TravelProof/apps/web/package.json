@@ -13,6 +13,8 @@
     "@fontsource/source-serif-4": "^5.3.1",
     "@react-pdf/renderer": "^4.3.0",
     "@travelproof/core": "workspace:*",
+    "@travelproof/ofac": "workspace:*",
+    "@travelproof/vasp-registry": "workspace:*",
     "next": "^15.0.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

@@ -1,0 +1,14 @@
+# Track the cre-run scaffold SOURCE (main.ts, config.json, workflow.yaml, project.yaml, package.json,
+# tsconfig.json) — it's the deliverable. Ignore only generated / heavy / secret artifacts.
+cre-run/**/node_modules/
+cre-run/**/.cre_build_tmp.js
+cre-run/**/package-lock.json
+cre-run/**/.env
+cre-run/.env
+# project.yaml needs a LITERAL rpc url (cre doesn't expand ${env}) which embeds a live API key —
+# keep it local-only; commit project.yaml.example with a placeholder instead.
+cre-run/project.yaml
+# The repo-root .gitignore ignores config.json globally; re-include the workflow configs — they hold
+# only endpoint URLs + the PUBLIC contract address + chain selector (no secrets), and the scaffold
+# won't simulate without them.
+!cre-run/**/config.json

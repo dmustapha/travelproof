@@ -1,1 +1,1 @@
-{ "name": "@travelproof/vasp-registry", "type": "commonjs", "scripts": { "start": "tsx src/server.ts" }, "devDependencies": { "tsx": "^4.0.0" } }
+{ "name": "@travelproof/vasp-registry", "type": "commonjs", "exports": { "./verify": "./src/verify.ts", "./trisa": "./src/trisa.ts", "./server": "./src/server.ts" }, "scripts": { "start": "tsx src/server.ts" }, "devDependencies": { "tsx": "^4.0.0" } }

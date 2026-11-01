@@ -1,0 +1,7 @@
+{
+  "ofacApiUrl": "http://localhost:3001/api/ofac",
+  "receiver": "0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD",
+  "gasLimit": "500000",
+  "chainName": "ethereum-testnet-sepolia-base-1",
+  "chainSelector": "10344971235874465080"
+}

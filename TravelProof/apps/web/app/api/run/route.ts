@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     ({ verifyVerdict, screenVerdict, txHashes, publishDate } = await triggerCreRun(jobId, intent, ivms));
   } catch (e) {
     const reason = e instanceof Error ? e.message : String(e);
-    return NextResponse.json({ stage: "DEGRADED", reason: `CRE runner unavailable: ${reason}. Wire the runner (CRE_WIRED=1) - the in-enclave verify is CRE Confidential Workflows, beta access pending.` }, { status: 502 });
+    return NextResponse.json({ stage: "DEGRADED", reason: `CRE runner unavailable: ${reason}. Start the dev server with CRE_WIRED=1 so scripts/run-cre.sh can drive 'cre workflow simulate' (local CRE simulation).` }, { status: 502 });
   }
   // Fail-closed: the CRE runner MUST return a real enum verdict. A sentinel/unknown value (the
   // run-cre.sh-not-wired failure mode) is rejected, never attested - prevents fabricated state.
