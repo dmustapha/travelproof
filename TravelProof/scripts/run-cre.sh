@@ -23,17 +23,33 @@ CRE_RUN_DIR="$REPO_ROOT/packages/cre/cre-run"
 CRE="${CRE_BIN:-$HOME/.cre/bin/cre}"
 APP_BASE="${APP_BASE_URL:-http://localhost:3001}"
 TARGET="${CRE_TARGET:-staging-settings}"
-export PATH="$HOME/.cre/bin:/usr/local/bin:/opt/homebrew/bin:$PATH"
+# bun is required by `cre` to compile TypeScript workflows; it installs to ~/.bun/bin.
+export PATH="$HOME/.cre/bin:$HOME/.bun/bin:/usr/local/bin:/opt/homebrew/bin:$PATH"
 
 [ -x "$CRE" ] || { echo "CRE_CLI_MISSING: $CRE not found/executable" >&2; exit 1; }
 
 # Warm the OFAC index so the in-workflow DON fetch returns instantly (a cold /api/ofac pulls ~10MB and
-# would risk timing out the CRE HTTP capability). Best-effort; the simulate call is the real gate.
-curl -s -o /dev/null --max-time 30 "$APP_BASE/api/ofac?address=warmup" || true
+# would risk timing out the CRE HTTP capability). Warm the ACTUAL beneficiary address (the index is
+# global, so any address warms it). Best-effort; the simulate call is the real gate.
+BENE_ADDR="$(printf '%s' "$PAYLOAD" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{console.log(JSON.parse(s).beneficiaryAddress||'warmup')}catch{console.log('warmup')}})" 2>/dev/null || echo warmup)"
+curl -s -o /dev/null --max-time 30 "$APP_BASE/api/ofac?address=$BENE_ADDR" || true
 
 cd "$CRE_RUN_DIR"
-SCREEN_OUT="$("$CRE" workflow simulate screen --target "$TARGET" --http-payload "$PAYLOAD" --trigger-index 0 --non-interactive 2>&1 || true)"
-VERIFY_OUT="$("$CRE" workflow simulate verify --target "$TARGET" --http-payload "$PAYLOAD" --trigger-index 0 --non-interactive 2>&1 || true)"
+# Retry each simulate leg up to 3x. On a memory-constrained host the in-workflow CRE HTTP fetch can
+# transiently exceed the capability timeout, making a single simulate flaky. We re-run the REAL
+# simulate until it emits a result; this never fabricates a verdict (a leg that never yields a
+# "Workflow Simulation Result" still fails the parse below and api/run returns 502, fail-closed).
+sim_leg() {
+  local leg="$1" out=""
+  for attempt in 1 2 3; do
+    out="$("$CRE" workflow simulate "$leg" --target "$TARGET" --http-payload "$PAYLOAD" --trigger-index 0 --non-interactive 2>&1 || true)"
+    printf '%s' "$out" | grep -q "Workflow Simulation Result" && break
+    sleep 2
+  done
+  printf '%s' "$out"
+}
+SCREEN_OUT="$(sim_leg screen)"
+VERIFY_OUT="$(sim_leg verify)"
 
 SCREEN_FILE="$(mktemp)"; VERIFY_FILE="$(mktemp)"
 printf '%s' "$SCREEN_OUT" > "$SCREEN_FILE"

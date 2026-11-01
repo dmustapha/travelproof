@@ -3,7 +3,8 @@
 
 ## Required
 - [x] GitHub: https://github.com/dmustapha/travelproof (HTTP 200)
-- [x] Live Demo: https://travelproof.vercel.app (HTTP 200)
+- [x] Live Demo (Vercel, UI + fail-closed): https://travelproof.vercel.app (HTTP 200)
+- [x] Live CRE host (real verdicts): https://travelproof.140.238.139.190.sslip.io (HTTP 200; POST /api/run returns real CLEARED / DO_NOT_TRANSMIT via prebuilt-WASM cre simulate)
 - [ ] Demo Video: TravelProof/video/out/demo.mp4 (1080p, 2m53s); attach the YouTube unlisted link in the submission form
 
 ## Contract Addresses
