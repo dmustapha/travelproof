@@ -1,0 +1,57 @@
+{
+  "capturedAt": "2026-11-01",
+  "mode": "local CRE simulation (cre workflow simulate; DON+enclave emulated on host, real OFAC+TRISA data, no beta)",
+  "host": "local dev server :3001, CRE_WIRED=1",
+  "results": {
+    "ofac_garantex": {
+      "hit": true,
+      "address": "3Lpoy53K625zVeE47ZasiG5jGkAxJ27kh1",
+      "publishDate": "10/28/2026",
+      "recordCount": 19484
+    },
+    "api_run_cleared": {
+      "stage": "CLEARED",
+      "jobId": "0xf114a7302ea62a66e15f6aa6ec374a457e999d51d061847ea56203b9f77743a7",
+      "applicability": {
+        "applicable": true,
+        "regime": "BOTH",
+        "requiredOriginatorFields": [
+          "name",
+          "accountNumber",
+          "geographicAddress|customerIdentification|nationalIdentification|dateAndPlaceOfBirth"
+        ],
+        "requiredBeneficiaryFields": [
+          "name",
+          "accountNumber"
+        ],
+        "citation": "Regulation (EU) 2023/1113, Article 14(1)(a)-(d); FATF Recommendation 16 (Travel Rule); FATF Updated Guidance VA/VASP (Oct 2021) paras 177-184",
+        "rationale": "Crypto-asset transfer between CASPs. EU TFR Article 14 applies regardless of value; the value also exceeds the FATF USD/EUR 1,000 de-minimis."
+      },
+      "verifyVerdict": 0,
+      "screenVerdict": "CLEAR",
+      "txHashes": []
+    },
+    "api_run_garantex": {
+      "stage": "DO_NOT_TRANSMIT",
+      "jobId": "0x7f199c84e490c9403f248421063d01e92fed6613ad427df7cbd626d663c86e63",
+      "applicability": {
+        "applicable": true,
+        "regime": "BOTH",
+        "requiredOriginatorFields": [
+          "name",
+          "accountNumber",
+          "geographicAddress|customerIdentification|nationalIdentification|dateAndPlaceOfBirth"
+        ],
+        "requiredBeneficiaryFields": [
+          "name",
+          "accountNumber"
+        ],
+        "citation": "Regulation (EU) 2023/1113, Article 14(1)(a)-(d); FATF Recommendation 16 (Travel Rule); FATF Updated Guidance VA/VASP (Oct 2021) paras 177-184",
+        "rationale": "Crypto-asset transfer between CASPs. EU TFR Article 14 applies regardless of value; the value also exceeds the FATF USD/EUR 1,000 de-minimis."
+      },
+      "verifyVerdict": 0,
+      "screenVerdict": "HIT",
+      "txHashes": []
+    }
+  }
+}
