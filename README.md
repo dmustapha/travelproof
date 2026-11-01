@@ -9,7 +9,8 @@
 [![Tests](https://img.shields.io/badge/tests-37%20JS%20%2B%208%20Solidity-success)](#tests)
 [![License](https://img.shields.io/badge/license-MIT-black)](LICENSE)
 
-**Live demo:** https://travelproof.vercel.app
+**Live demo (UI):** https://travelproof.vercel.app
+**Live CRE verdicts:** https://travelproof.140.238.139.190.sslip.io (POST `/api/run`: a clean registered transfer returns `CLEARED`, the Garantex SDN address returns `DO NOT TRANSMIT`, computed by real `cre workflow simulate`)
 **On-chain attestation contract:** [`0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD`](https://sepolia.basescan.org/address/0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD) on Base Sepolia (chainId 84532)
 
 Built for the BLI Legal Tech Hackathon 2 (LegalTech & RegTech track, Chainlink CRE bounty).
@@ -74,8 +75,9 @@ TravelProof is deliberately explicit about what is live versus what is scoped-bu
 | Deterministic legal resolver + IVMS101 builder | LIVE | `packages/core`, 17/17 tests, deterministic round-trip |
 | Officer cockpit, record, proof, and ledger views + filable PDF memo | LIVE | 11 routes build and render; hosted PDF at `/record/[jobId]/memo.pdf` |
 | On-chain read path (`/ledger`, `/proof/[jobId]`) | LIVE | queries the real contract; populates with zero code change once seeded |
-| CRE Confidential-HTTP verify workflow (TEE privacy path) | NOT LIVE (beta access pending) | real workflow code against cre-sdk 1.23.0; gated on the Confidential Workflows private-beta invite |
-| Two seeded attestations (CLEARED + DO-NOT-TRANSMIT) | DEFERRED | produced by `scripts/run-cre.sh` (fail-loud stub) pending `cre login`; `/api/run` fails closed to DEGRADED until wired |
+| CRE verify + screen workflows, real verdicts | LIVE via local CRE simulation | real cre-sdk 1.23.0 workflows run end-to-end at https://travelproof.140.238.139.190.sslip.io; `/api/run` returns a real `CLEARED` or `DO NOT TRANSMIT` on live OFAC + TRISA data (no beta). Hosted as prebuilt WebAssembly (`cre workflow custom-build`) |
+| On-chain DON-signed attestation (BaseScan events) | NOT LIVE (managed-DON deploy access GATED) | `onReport` is forwarder-only; a real attestation needs the production managed DON (requested via `cre account access`). The contract is deployed and on-chain-readable; no fabricated on-chain write |
+| CRE Confidential-HTTP verify (production TEE privacy path) | NOT LIVE (beta pending) | runs under local simulation today; the production Confidential Workflows managed DON is beta-pending |
 | VASP registry | DISCLOSED MOCK | real TRISA directory lookup with a disclosed synthetic fallback (surfaced via `source`) |
 
 Specimen records shown in the UI are labelled SPECIMEN. The deliverable is a Travel Rule **transmittal** record, not a regulatory "filing".
