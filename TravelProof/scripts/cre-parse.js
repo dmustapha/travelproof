@@ -38,9 +38,18 @@ if (typeof screen.screenVerdict !== "string" || typeof verify.verifyVerdict !== 
   process.exit(1);
 }
 
+// The CLI returns txHash either as a hex string or as a byte map ({"0":58,"1":80,...}); accept both.
+function hashToHex(h) {
+  if (typeof h === "string") return h;
+  if (!h || typeof h !== "object") return null;
+  const keys = Object.keys(h).sort((a, b) => a - b);
+  if (keys.length !== 32) return null;
+  return "0x" + keys.map((k) => Number(h[k]).toString(16).padStart(2, "0")).join("");
+}
+
 // Real on-chain tx hashes only exist with --broadcast; a plain simulate has none → [].
 const txHashes = [screen.tx, verify.tx]
-  .map((t) => (t && typeof t.txHash === "string" ? t.txHash : null))
+  .map((t) => (t ? hashToHex(t.txHash) : null))
   .filter(Boolean);
 
 process.stdout.write(JSON.stringify({ verifyVerdict: verify.verifyVerdict, screenVerdict: screen.screenVerdict, txHashes }));

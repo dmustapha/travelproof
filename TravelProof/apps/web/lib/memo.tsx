@@ -142,10 +142,10 @@ export function MemoDoc({ ivms, applicability, jobId, commitment, txUrl, cleared
         <Text style={s.h2}><Text style={s.sn}>§4  </Text>Attestation</Text>
         <Text style={s.p}>
           {specimen
-            ? "No attestation was written: this is a specimen. A live record carries a DON-signed attestation on Base Sepolia (chainId 84532), contract 0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD."
+            ? "No attestation was written: this is a specimen. A live record carries a DON-signed attestation on Base Sepolia (chainId 84532), contract 0x210D397d4665d805f0F1089246d5F187486d7B4D."
             : attested
-              ? `DON-signed attestation on Base Sepolia (chainId 84532), contract TravelRuleAttestation 0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD. Independently verifiable: ${txUrl}`
-              : "No attestation is readable on-chain for this record (not yet written, or the read failed). Nothing is claimed until it is; contract TravelRuleAttestation 0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD, chainId 84532."}
+              ? `DON-signed attestation on Base Sepolia (chainId 84532), contract TravelRuleAttestation 0x210D397d4665d805f0F1089246d5F187486d7B4D. Independently verifiable: ${txUrl}`
+              : "No attestation is readable on-chain for this record (not yet written, or the read failed). Nothing is claimed until it is; contract TravelRuleAttestation 0x210D397d4665d805f0F1089246d5F187486d7B4D, chainId 84532."}
         </Text>
         {cleared && (
           <>

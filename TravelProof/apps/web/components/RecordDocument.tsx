@@ -7,7 +7,7 @@ type Run = {
   commitmentHash: string; txHash?: string; publishDate?: string;
   transfer?: { amount: string; assetSymbol: string; fiatValueUsd: number };
 };
-const CONTRACT = "0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD";
+const CONTRACT = "0x210D397d4665d805f0F1089246d5F187486d7B4D";
 const SHORT = `${CONTRACT.slice(0, 6)}…${CONTRACT.slice(-4)}`;
 
 function Field({ path, value, mono, warn }: { path: string; value?: string; mono?: boolean; warn?: boolean }) {

@@ -1,0 +1,46 @@
+{
+  "capturedAt": "2026-11-26",
+  "network": "Base Sepolia (chainId 84532)",
+  "contract": "0x210D397d4665d805f0F1089246d5F187486d7B4D",
+  "sourceVerified": "Sourcify exact match; Blockscout verified",
+  "forwarder": "0x82300bd7c3958625581cc2F77bC6464dcEcDF3e5 (CRE MockKeystoneForwarder, the simulation forwarder)",
+  "mode": "cre workflow simulate --broadcast (single-node local simulation; real OFAC SDN feed; reports written on-chain through the simulation forwarder). Not a deployed DON workflow: the account has no CRE deploy access.",
+  "records": [
+    {
+      "label": "CLEARED",
+      "jobId": "0xafa0c2d3fd14e8423a5b2a9bb32bff37aff51d1dcb681909a28a94e9d09b17cf",
+      "verifyTx": "0x3a50b529f1824f60fd64d4fa08e2bc8895ac7e370b7b1403e9eb567af94ef570",
+      "screenTx": "0xbb3014e2d3a38d5175a5c636d771110ad3d402c959163fd1bb96f27f93d96344",
+      "verifyVerdict": 0,
+      "screenVerdict": 0,
+      "emittedVerdict": 0
+    },
+    {
+      "label": "DO NOT TRANSMIT (OFAC SDN hit, Garantex address)",
+      "jobId": "0x4a5e2092889b8ed8f438521d1e7e04dabf35d1064e6f992ea7822271d9458dca",
+      "verifyTx": "0x6703e3f84d5156f4c71355bd24d36ec9731966f5f25790a70d53557aac67d5fb",
+      "screenTx": "0x833be97d9104cc10a06666eae1f48c2eec81806c4b77783b114868286d63cf03",
+      "verifyVerdict": 0,
+      "screenVerdict": 1,
+      "emittedVerdict": 1
+    },
+    {
+      "label": "FAIL-CLOSED (identity check unreachable, clean address): recorded BLOCKED, never CLEARED",
+      "jobId": "0xc0c01f2eda4f3f1719d58ed62376db17b48d509d5f230616e71bbda120e7c47f",
+      "verifyVerdict": 2,
+      "screenVerdict": 0,
+      "emittedVerdict": 1
+    },
+    {
+      "label": "FAIL-CLOSED (identity check unreachable, sanctioned address)",
+      "jobId": "0x14b0272ff25c5ea68b167dc705c4bd2bbfd948651d787e2edb79e7d75ac7c468",
+      "verifyVerdict": 2,
+      "screenVerdict": 1,
+      "emittedVerdict": 1
+    }
+  ],
+  "previousContract": {
+    "address": "0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD",
+    "note": "Bound to the production KeystoneForwarder; receives nothing until the workflow is deployed to a DON."
+  }
+}

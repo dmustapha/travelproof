@@ -154,7 +154,7 @@ export default function Landing() {
               <div className="t2-row"><i>fingerprint</i><span>0x434a…f441</span></div>
               <div className="t2-row"><i>time</i><span>block timestamp</span></div>
               <div className="t2-row nope"><i>names</i><span>none, ever</span></div>
-              <code className="t2-cmd">cast call 0xEE4D…E7cD &quot;getAttestation(bytes32)&quot;</code>
+              <code className="t2-cmd">cast call 0x210D…7B4D &quot;getAttestation(bytes32)&quot;</code>
               <small>Anyone can run this. It returns hashes and yes/no, nothing else.</small>
             </div></div>
             <svg className="lp-seam t2-seam" viewBox={`0 0 44 ${T2.h}`} aria-hidden="true"><path d={T2.seam} className="seam-glow" /><path d={T2.fibL} className="fib" /><path d={T2.fibR} className="fib fib2" /></svg>

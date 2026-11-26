@@ -5,13 +5,13 @@
 > Prove who the counterparty is. Keep who they are off the ledger.
 
 [![Live](https://img.shields.io/badge/live-travelproof.vercel.app-111)](https://travelproof.vercel.app)
-[![Contract](https://img.shields.io/badge/Base%20Sepolia-0xEE4D%E2%80%A6E7cD-0052FF)](https://sepolia.basescan.org/address/0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD)
+[![Contract](https://img.shields.io/badge/Base%20Sepolia-0x210D%E2%80%A67B4D-0052FF)](https://sepolia.basescan.org/address/0x210D397d4665d805f0F1089246d5F187486d7B4D)
 [![Tests](https://img.shields.io/badge/tests-37%20JS%20%2B%208%20Solidity-success)](#tests)
 [![License](https://img.shields.io/badge/license-MIT-black)](LICENSE)
 
 **Live demo (UI):** https://travelproof.vercel.app
 **Live CRE verdicts:** https://travelproof.140.238.139.190.sslip.io (POST `/api/run`: a clean registered transfer returns `CLEARED`, the Garantex SDN address returns `DO NOT TRANSMIT`, computed by real `cre workflow simulate`)
-**On-chain attestation contract:** [`0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD`](https://sepolia.basescan.org/address/0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD) on Base Sepolia (chainId 84532)
+**On-chain attestation contract:** [`0x210D397d4665d805f0F1089246d5F187486d7B4D`](https://sepolia.basescan.org/address/0x210D397d4665d805f0F1089246d5F187486d7B4D) on Base Sepolia (chainId 84532)
 
 Built for the BLI Legal Tech Hackathon 2 (LegalTech & RegTech track, Chainlink CRE bounty).
 
@@ -57,12 +57,22 @@ These are the non-negotiable properties the system is built to enforce. Each is 
 
 ## Live transactions
 
-| What | Value | Explorer |
-|------|-------|----------|
-| Attestation contract | `0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD` | [BaseScan](https://sepolia.basescan.org/address/0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD) |
-| Deploy tx | `0xd8d5d6543e906bb448f50415973aa092c1a5aac97789fe25f230913be94a5530` (block 52683257) | [BaseScan](https://sepolia.basescan.org/tx/0xd8d5d6543e906bb448f50415973aa092c1a5aac97789fe25f230913be94a5530) |
-| KeystoneForwarder (constructor) | `0xF8344CFd5c43616a4366C34E3EEE75af79a74482` | official Chainlink CRE Base Sepolia forwarder |
-| Deployer | `0xc211C942946011859ca634F22400d80570ED12A5` | Base Sepolia |
+Real attestations on Base Sepolia (chainId 84532), written by `cre workflow simulate --broadcast` on 2026-11-26. The contract emits a verdict only after both legs (identity verify and OFAC screen) have landed.
+
+| Record | Verify leg | Screen leg | On-chain verdict |
+|--------|-----------|------------|------------------|
+| CLEARED (clean counterparty) | [`0x3a50b529…f570`](https://sepolia.basescan.org/tx/0x3a50b529f1824f60fd64d4fa08e2bc8895ac7e370b7b1403e9eb567af94ef570) | [`0xbb3014e2…6344`](https://sepolia.basescan.org/tx/0xbb3014e2d3a38d5175a5c636d771110ad3d402c959163fd1bb96f27f93d96344) | `0` CLEARED |
+| DO NOT TRANSMIT (live OFAC SDN hit, Garantex address) | [`0x6703e3f8…d5fb`](https://sepolia.basescan.org/tx/0x6703e3f84d5156f4c71355bd24d36ec9731966f5f25790a70d53557aac67d5fb) | [`0x833be97d…cf03`](https://sepolia.basescan.org/tx/0x833be97d9104cc10a06666eae1f48c2eec81806c4b77783b114868286d63cf03) | `1` BLOCKED |
+| Fail-closed (identity check unreachable, clean address) | job `0xc0c01f2e…c47f` | same job | `1` BLOCKED, never CLEARED |
+
+| What | Value |
+|------|-------|
+| Attestation contract (receives the records above) | [`0x210D397d4665d805f0F1089246d5F187486d7B4D`](https://sepolia.basescan.org/address/0x210D397d4665d805f0F1089246d5F187486d7B4D), source verified (Sourcify exact match, Blockscout) |
+| Forwarder it trusts | `0x82300bd7c3958625581cc2F77bC6464dcEcDF3e5`, Chainlink's CRE simulation forwarder (MockKeystoneForwarder) |
+| Production-forwarder contract | [`0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD`](https://sepolia.basescan.org/address/0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD), bound to the official KeystoneForwarder `0xF8344CFd5c43616a4366C34E3EEE75af79a74482`. It receives nothing until the workflow is deployed to a DON (deploy access pending). |
+| Deployer | `0xc211C942946011859ca634F22400d80570ED12A5` |
+
+Scope: these runs use single-node local simulation, so they prove the full flow and the contract's gating, not multi-node report authenticity. Machine-readable copy: `TravelProof/evidence/onchain-attestations.json`.
 
 ## Honesty ledger
 
@@ -70,13 +80,13 @@ TravelProof is deliberately explicit about what is live versus what is scoped-bu
 
 | Capability | Status | Evidence |
 |------------|--------|----------|
-| No-PII attestation contract, deployed and on-chain-readable | LIVE on Base Sepolia | contract `0xEE4D…E7cD`, 8/8 Solidity tests |
+| No-PII attestation contract, deployed and on-chain-readable | LIVE on Base Sepolia | contract `0x210D…7B4D` (source verified), 8/8 Solidity tests |
 | Live OFAC SDN screen | LIVE | publish date 2026-10-28, 1058 crypto addresses indexed, Garantex demo HIT self-check passes |
 | Deterministic legal resolver + IVMS101 builder | LIVE | `packages/core`, 17/17 tests, deterministic round-trip |
 | Officer cockpit, record, proof, and ledger views + filable PDF memo | LIVE | 11 routes build and render; hosted PDF at `/record/[jobId]/memo.pdf` |
-| On-chain read path (`/ledger`, `/proof/[jobId]`) | LIVE | queries the real contract; populates with zero code change once seeded |
+| On-chain read path (`/ledger`, `/proof/[jobId]`) | LIVE | queries the real contract, which now holds real CLEARED and BLOCKED records |
 | CRE verify + screen workflows, real verdicts | LIVE via local CRE simulation | real cre-sdk 1.23.0 workflows run end-to-end at https://travelproof.140.238.139.190.sslip.io; `/api/run` returns a real `CLEARED` or `DO NOT TRANSMIT` on live OFAC + TRISA data (no beta). Hosted as prebuilt WebAssembly (`cre workflow custom-build`) |
-| On-chain DON-signed attestation (BaseScan events) | NOT LIVE (managed-DON deploy access GATED) | `onReport` is forwarder-only; a real attestation needs the production managed DON (requested via `cre account access`). The contract is deployed and on-chain-readable; no fabricated on-chain write |
+| On-chain attestation (BaseScan events) | LIVE via simulation forwarder | real CLEARED, BLOCKED and fail-closed records on Base Sepolia (see Live transactions). Single-node simulation signing; the production managed-DON path is still deploy-access GATED |
 | CRE Confidential-HTTP verify (production TEE privacy path) | NOT LIVE (beta pending) | runs under local simulation today; the production Confidential Workflows managed DON is beta-pending |
 | VASP registry | DISCLOSED MOCK | real TRISA directory lookup with a disclosed synthetic fallback (surfaced via `source`) |
 

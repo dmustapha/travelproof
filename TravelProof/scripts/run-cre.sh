@@ -35,6 +35,13 @@ BENE_ADDR="$(printf '%s' "$PAYLOAD" | node -e "let s='';process.stdin.on('data',
 curl -s -o /dev/null --max-time 30 "$APP_BASE/api/ofac?address=$BENE_ADDR" || true
 
 cd "$CRE_RUN_DIR"
+# CRE_BROADCAST=1 writes each leg's signed report on-chain through the simulation forwarder
+# (MockKeystoneForwarder). CRE_ENV_FILE must point at a git-ignored env file holding CRE_ETH_PRIVATE_KEY.
+BROADCAST_ARGS=()
+if [ "${CRE_BROADCAST:-0}" = "1" ]; then
+  [ -f "${CRE_ENV_FILE:-}" ] || { echo "CRE_ENV_FILE_MISSING: set CRE_ENV_FILE for broadcast" >&2; exit 1; }
+  BROADCAST_ARGS=(--broadcast -e "$CRE_ENV_FILE")
+fi
 # Retry each simulate leg up to 3x. On a memory-constrained host the in-workflow CRE HTTP fetch can
 # transiently exceed the capability timeout, making a single simulate flaky. We re-run the REAL
 # simulate until it emits a result; this never fabricates a verdict (a leg that never yields a
@@ -42,7 +49,7 @@ cd "$CRE_RUN_DIR"
 sim_leg() {
   local leg="$1" out=""
   for attempt in 1 2 3; do
-    out="$("$CRE" workflow simulate "$leg" --target "$TARGET" --http-payload "$PAYLOAD" --trigger-index 0 --non-interactive 2>&1 || true)"
+    out="$("$CRE" workflow simulate "$leg" --target "$TARGET" --http-payload "$PAYLOAD" --trigger-index 0 --non-interactive ${BROADCAST_ARGS[@]+"${BROADCAST_ARGS[@]}"} 2>&1 || true)"
     printf '%s' "$out" | grep -q "Workflow Simulation Result" && break
     sleep 2
   done
