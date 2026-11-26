@@ -33,5 +33,5 @@ echo "[3/4] production build"
 echo "[4/4] start on :3001 (Ctrl-C to stop; use pm2/systemd for a daemon)"
 export CRE_WIRED=1
 export VASP_VERIFY_KEY="${VASP_VERIFY_KEY:?set VASP_VERIFY_KEY to a strong secret before running}"
-export ATTESTATION_ADDRESS="${ATTESTATION_ADDRESS:-0xEE4D49549Cf0B9163687D8d042821dE736F6E7cD}"
+export ATTESTATION_ADDRESS="${ATTESTATION_ADDRESS:-0x210D397d4665d805f0F1089246d5F187486d7B4D}"
 cd apps/web && exec pnpm start -p 3001
